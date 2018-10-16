@@ -31,13 +31,14 @@ ALLOWED_HOSTS = []
 # Application definition
 
 INSTALLED_APPS = [
-    'homepage.apps.HomepageConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'djcelery',
+    'homepage',
 ]
 
 MIDDLEWARE = [
@@ -122,3 +123,10 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, "static"),
 ]
+
+# celery configuration
+import djcelery
+djcelery.setup_loader()
+BROKER_URL = 'amqp://localhost:5672'
+CELERY_RESULT_BACKEND = 'amqp://localhost:5672'
+

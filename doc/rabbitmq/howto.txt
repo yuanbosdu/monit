@@ -1,0 +1,10 @@
+(1) website:
+    http://www.rabbitmq.com
+(2) enable website
+    rabbitmq-plugins enable rabbitmq_management
+(3) add the user
+    rabbitmqctl.bat add_user monit monit
+(4) add the vhost
+    rabbitmqctl add_vhost localhost
+(5) arrange the permission
+    rabbitmqctl set_permissions -p localhost monit ".*" ".*" ".*"

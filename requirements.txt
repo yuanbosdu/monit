@@ -1,2 +1,4 @@
 pyserial==3.4
 Django==2.0
+Celery==4.2.1
+django-celery==3.2.2
