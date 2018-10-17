@@ -5,5 +5,5 @@ from django.shortcuts import render
 from homepage.tasks import mul
 
 def index(request):
-    mul.delay(100, 100)
+    #mul.delay(100, 100)
     return render(request, "index.html")
