@@ -19,10 +19,17 @@ def serial_push(request):
     #first get the object
     ob = Zigbee.objects.filter(name=zigbee_name)
     print(ob)
-    print(ob[0])
-    print(ob[0].state)
+    print(len(ob))
+    if len(ob) != 0:
+        print(ob[0])
+        print(ob[0].state.all())
 
-    state = ZigbeeState.objects.filter(zigbee=ob[0])
-    print(state)
+        # insert the new state info to the database
+        mZigbee_state = ZigbeeState.objects.create(zigbee=ob[0], state=zigbee_state)
 
+    else:
+        # create the new object
+        mZigbee = Zigbee.objects.create(name=zigbee_name)
+        mZigbee_state = ZigbeeState.objects.create(zigbee=mZigbee, state=zigbee_state)
+        print('add the new record in the database')
     return HttpResponse('OK')
