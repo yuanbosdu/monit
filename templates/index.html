@@ -5,15 +5,26 @@
     <meta charset="utf-8" />
     <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible" />
     <meta content="width=device-width, initial-scale=1, maximum-scale=2, user-scalable=no" name="viewport" />
-    <meta content="Semantic-UI-Forest, collection of design, themes and templates for Semantic-UI." name="description" />
-    <meta content="Semantic-UI, Theme, Design, Template" name="keywords" />
+    <meta content="360monit 云监测平台" name="description" />
+    <meta content="360monit 云监测平台" name="keywords" />
     <meta content="PPType" name="author" />
     <meta content="#ffffff" name="theme-color" />
-    <title>Semantic-UI-Forest, collection of design, themes and templates for Semantic-UI.</title>
+    <title>360monit 云监测平台</title>
     <link href="{% static 'dist/semantic-ui/semantic.min.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'stylesheets/default.css' %}" rel="stylesheet" type="text/css" />
     <link href="{% static 'stylesheets/pandoc-code-highlight.css' %}" rel="stylesheet" type="text/css" />
     <script src="{% static 'dist/jquery/jquery.min.js' %}"></script>
+    <!--[if IE]>
+    <script type="text/javascript" src="path/to/flashcanvas.js"></script>
+    <![endif]-->
+    <script type="text/javascript" src="{% static 'dist/flotr2/flotr2.min.js' %}"></script>
+    <style>
+      #container {
+        width : 600px;
+        height: 384px;
+        margin: 8px auto;
+      }
+    </style>
   </head>
   <body><div class="ui borderless fixed blue inverted pointing menu">
   <div class="ui container">
@@ -35,9 +46,17 @@
         烟雾报警器
       </h2>
       <div class="ui divider"></div>
-      <p>
-        This blog post shows a few different types of content that's supported and styled with Semantic-UI. Basic typesetting, list, and code are all supported.
+    {% for g, s in gas_state %}
+      {% if forloop.first %}
+      当前状态为：{{ s }}, 采集时间为：{{ g }}
+      {% endif %}
+  <p>时间：{{ g }}</p>
+      <p>状态：{{ s }}</p>
+    {% endfor %}
+  </p>
       </p>
+        <div id="container"></div>
+
       <div class="ui hidden divider"></div>
       <h2 class="ui sub header">
         温湿度传感器
@@ -103,5 +122,66 @@
     margin-bottom: 0;
   }
 </style>
+  <script type="text/javascript">
+      (function () {
+        var
+          container = document.getElementById('container'),
+          data = [],
+          graph, i;
+
+          var tempdata = [];
+
+
+        $.get('http://localhost:8000/index/api/device/?english=Gas', function(data, status) {
+
+          console.log(data);
+          tempdata = data;
+          for(i=0;i<data.length;i++)
+            tempdata.push([data[i][0], data[i][1]]);
+          console.log(tempdata);
+
+        });
+
+
+        var a,b;
+
+        console.log(tempdata);
+
+        for (i = 0; i < tempdata.length; i++) {
+            a = tempdata[i][0];
+            if (data[i][1] == 'Alarm!')
+              b = 1 + Math.random();
+            else
+              b = 2;
+            data.push([i, b]);
+          }
+
+          console.log(data);
+
+
+        // Sample the sine function
+        //for (i = 0; i < 4 * Math.PI; i += 0.2) {
+        //  data.push([i, Math.sin(i)]);
+        //}
+
+        //for (i = 0; i<100; i++) {
+        //  gdata.push([i, i%2]);
+        //  }
+
+         console.log(data);
+
+        // Draw Graph
+        graph = Flotr.draw(container, [ {data: data, lines : { fill: false, show : true }, points : { show : true }} ], {
+          xaxis: {
+            max: 10,
+            min: 0,
+            },
+          yaxis : {
+            max: 2,
+            min: -2,
+          }
+        });
+      })();
+    </script>
   </body>
 </html>

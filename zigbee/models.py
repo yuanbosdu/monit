@@ -5,6 +5,7 @@ from django.db import models
 
 class Zigbee(models.Model):
     name = models.CharField(max_length=50)
+    english = models.CharField(max_length=50, null=True, blank=True)
     desc = models.TextField(blank=True, null=True)
     address = models.CharField(max_length=50, blank=True, null=True)
     ctime = models.DateTimeField(auto_now=True)

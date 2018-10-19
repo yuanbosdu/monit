@@ -12,12 +12,16 @@ device_list = [
     b'Hall',
     b'Shock',
     b'Pir',
-    b'Humidity',
+    b'Humidity:',
 ]
 
 device_name = [
-    b'气体检测',
-    b''
+    '气体监测',
+    '酒精监测',
+    'Hall监测',
+    'Shock监测',
+    'Pir监测',
+    '温湿度监测',
 ]
 
 print(device_list)
@@ -32,12 +36,13 @@ else:
 while True:
     need_push = False
     r_name = None
+    r_name_english = None
     r_state = None
     text = mserial.readline()
     text = text.split()
     print(text)
     if text[0] in device_list:
-        r_name = text[0]
+        r_name_english = text[0]
         r_state = text[-1]
         print(text)
         print(r_name)
@@ -47,12 +52,15 @@ while True:
         need_push = True
 
     time.sleep(1)
-    payload = {
-        'name': r_name,
-        'state': r_state,
-    }
+
     if need_push:
         need_push = False
+        print(r_name_english)
+        payload = {
+            'name': device_name[device_list.index(r_name_english)],
+            'english': r_name_english,
+            'state': r_state,
+        }
         res = requests.post(url, data=payload)
         print(res)
         print("end the call")
