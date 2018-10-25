@@ -17,11 +17,11 @@
     <!--[if IE]>
     <script type="text/javascript" src="path/to/flashcanvas.js"></script>
     <![endif]-->
-    <script type="text/javascript" src="{% static 'dist/flotr2/flotr2.min.js' %}"></script>
+    <script type="text/javascript" src="{% static 'dist/echarts/echarts.min.js' %}"></script>
     <style>
       #container {
         width : 600px;
-        height: 384px;
+        height: 400px;
         margin: 8px auto;
       }
     </style>
@@ -46,15 +46,20 @@
         烟雾报警器
       </h2>
       <div class="ui divider"></div>
+      <p>
     {% for g, s in gas_state %}
       {% if forloop.first %}
       当前状态为：{{ s }}, 采集时间为：{{ g }}
+      {% if s == 'Alarm!' %}
+      <button class="ui red button">报警</button>
       {% endif %}
-  <p>时间：{{ g }}</p>
-      <p>状态：{{ s }}</p>
+      {% endif %}
     {% endfor %}
-  </p>
       </p>
+      <div class="ui toggle checkbox">
+        <input type="checkbox" name="gasAction">
+        <label>改为Normal!</label>
+      </div>
         <div id="container"></div>
 
       <div class="ui hidden divider"></div>
@@ -124,39 +129,62 @@
 </style>
   <script type="text/javascript">
       (function () {
-        var
-          container = document.getElementById('container'),
-          data = [],
-          graph, i;
+        var myChart = echarts.init(document.getElementById('container'));
 
-          var tempdata = [];
+
 
 
         $.get('http://localhost:8000/index/api/device/?english=Gas', function(data, status) {
 
-          console.log(data);
-          tempdata = data;
-          for(i=0;i<data.length;i++)
-            tempdata.push([data[i][0], data[i][1]]);
-          console.log(tempdata);
-
-        });
-
-
-        var a,b;
-
-        console.log(tempdata);
-
-        for (i = 0; i < tempdata.length; i++) {
-            a = tempdata[i][0];
+          var xdata = [];
+          var xvalue = [];
+          var i;
+          for (i=0; i<data.length; i++) {
+            xdata.push(data[i][0]);
             if (data[i][1] == 'Alarm!')
-              b = 1 + Math.random();
+              xvalue.push(1);
             else
-              b = 2;
-            data.push([i, b]);
+              xvalue.push(0);
           }
 
-          console.log(data);
+          var option = {
+          title: {
+            left: 'center',
+            text: '烟雾状态曲线',
+          },
+          toolbox: {
+            feature: {
+              dataZoom: {
+                  yAxisIndex: 'none'
+              },
+              restore: {},
+              saveAsImage: {}
+            }
+          },
+          legend: {
+            data: ['烟雾状态'],
+          },
+          xAxis: {
+            type: 'category',
+            data: xdata,
+          },
+          yAxis: {
+            type: 'value',
+            boundaryGap: [0, '100%']
+          },
+          series: [{
+            name: '状态',
+            type: 'line',
+            data: xvalue,
+          }],
+          };
+
+          myChart.setOption(option);
+          });
+
+
+
+      })();
 
 
         // Sample the sine function
@@ -168,20 +196,7 @@
         //  gdata.push([i, i%2]);
         //  }
 
-         console.log(data);
 
-        // Draw Graph
-        graph = Flotr.draw(container, [ {data: data, lines : { fill: false, show : true }, points : { show : true }} ], {
-          xaxis: {
-            max: 10,
-            min: 0,
-            },
-          yaxis : {
-            max: 2,
-            min: -2,
-          }
-        });
-      })();
     </script>
   </body>
 </html>

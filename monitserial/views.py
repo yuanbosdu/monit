@@ -4,9 +4,9 @@ from django.shortcuts import render
 
 from django.http import request, response
 from django.shortcuts import render_to_response
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from zigbee.models import Zigbee, ZigbeeState
+from zigbee.models import Zigbee, ZigbeeState, ZigbeeAction
 
 device_list = [
     'Gas',
@@ -65,4 +65,43 @@ def serial_push(request):
             mZigbee_state = ZigbeeState.objects.create(zigbee=mZigbee, state=zigbee_state)
         print('add the new record in the database')
     return HttpResponse('OK')
+
+
+from rabbitmq.views import mq_push
+
+@csrf_exempt
+def serial_change(request):
+    mZigbeeName = request.POST.get('name', None)
+    mZigbeeEnglish = request.POST.get('english', None)
+    mZigbeeAction = request.POST.get('action', None)
+    mZigbeeNewState = request.POST.get('newstate', None)
+
+    if mZigbeeEnglish is None or mZigbeeAction is None or mZigbeeNewState is None:
+        return JsonResponse({
+            'err': 'please input the data',
+        })
+
+    # first find the zigbee
+    mZigbee = Zigbee.objects.filter(english=mZigbeeEnglish)
+    if mZigbee is None:
+        return  JsonResponse({
+            'err': 'there is no zigbee'
+        })
+    else:
+        mZigbee = mZigbee[0]
+    # get the latest zigbee state
+    mZigbeeState = ZigbeeState.objects.filter(zigbee=mZigbee).order_by('-utime')[0]
+
+    # create the newaction
+    mNewState = ZigbeeAction.objects.create(zigbee=mZigbee, zigbee_state=mZigbeeState, action=mZigbeeAction,
+                                            newstate=mZigbeeState)
+
+    # push the new job to the rabbitmq
+    mq_push('hello world')
+
+    return JsonResponse({
+        'err': 'None',
+        'message': 'OK',
+    })
+
 

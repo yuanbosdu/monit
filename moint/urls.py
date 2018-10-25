@@ -20,5 +20,6 @@ urlpatterns = [
     re_path('^$', include('homepage.urls')),
     path('index/', include('homepage.urls')),
     path('serial/', include('monitserial.urls')),
+    path('rabbitmq/', include('rabbitmq.urls')),
     path('admin/', admin.site.urls),
 ]

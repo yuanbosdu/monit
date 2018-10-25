@@ -22,3 +22,17 @@ class ZigbeeState(models.Model):
 
     def __str__(self):
         return "%s %s %s" % (self.zigbee.name, self.state, self.utime)
+
+
+class ZigbeeAction(models.Model):
+    zigbee = models.ForeignKey(Zigbee, on_delete=models.CASCADE)
+    zigbee_state = models.ForeignKey(ZigbeeState, on_delete=models.CASCADE)
+    action = models.CharField(max_length=50)
+    newstate = models.CharField(max_length=50)
+    ctime = models.DateTimeField(auto_now=True, auto_created=True)
+    mtime = models.DateTimeField(auto_now=True, auto_created=True)
+
+    def __str__(self):
+        return "%s: %s" % (self.action, self.newstate)
+
+

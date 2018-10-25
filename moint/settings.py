@@ -43,6 +43,7 @@ INSTALLED_APPS = [
     'homepage',
     'monitserial',
     'zigbee',
+    'rabbitmq',
 ]
 
 MIDDLEWARE = [
