@@ -10,9 +10,11 @@ channel = connection.channel()
 
 channel.queue_declare(queue='monit')
 
+import json
+
 
 def callback(ch, method, properities, body):
-    print("[x] Received %r" % body)
+    print("[x] Received %r" % json.loads(body))
 
 
 channel.basic_consume(callback, queue='monit', no_ack=True)

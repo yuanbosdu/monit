@@ -68,7 +68,7 @@ def serial_push(request):
 
 
 from rabbitmq.views import mq_push
-
+import json
 @csrf_exempt
 def serial_change(request):
     mZigbeeName = request.POST.get('name', None)
@@ -97,7 +97,11 @@ def serial_change(request):
                                             newstate=mZigbeeState)
 
     # push the new job to the rabbitmq
-    mq_push('hello world')
+    body = dict()
+    body['english'] = 'Gas'
+    body['newstate'] = 'Normal!'
+
+    mq_push(json.dumps(body))
 
     return JsonResponse({
         'err': 'None',

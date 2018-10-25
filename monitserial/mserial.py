@@ -4,6 +4,7 @@ import requests
 import time
 
 url = 'http://localhost:8000/serial/push/'
+url_change = 'http://localhost:8000/serial/change/'
 mserial = serial.Serial("COM1", 115200)
 
 device_list = [

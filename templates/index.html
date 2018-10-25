@@ -57,7 +57,7 @@
     {% endfor %}
       </p>
       <div class="ui toggle checkbox">
-        <input type="checkbox" name="gasAction">
+        <input type="checkbox" name="gasAction" id="gasAction">
         <label>改为Normal!</label>
       </div>
         <div id="container"></div>
@@ -195,6 +195,26 @@
         //for (i = 0; i<100; i++) {
         //  gdata.push([i, i%2]);
         //  }
+
+        $("input[name='gasAction']").bind('change', function() {
+          var state = $(this)[0].checked;
+          console.log(state);
+          if (state == true) {
+            console.log("checked");
+            $.post('http://localhost:8000/serial/change/',
+              {
+                'english': 'Gas',
+                'action': 'change',
+                'newstate': 'Normal!',
+              },
+              function(data) {
+                console.log(data);
+              });
+            }
+          else {
+            console.log("un checked");
+            }
+        });
 
 
     </script>
