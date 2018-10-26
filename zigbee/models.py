@@ -31,8 +31,11 @@ class ZigbeeAction(models.Model):
     newstate = models.CharField(max_length=50)
     ctime = models.DateTimeField(auto_now=True, auto_created=True)
     mtime = models.DateTimeField(auto_now=True, auto_created=True)
+    done = models.BooleanField(default=False)
 
     def __str__(self):
-        return "%s: %s" % (self.action, self.newstate)
+        return "%s: %s %s" % (self.action,
+                              self.newstate,
+                              self.done)
 
 
