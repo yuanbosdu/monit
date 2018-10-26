@@ -51,5 +51,7 @@ def callback(ch, method, properities, body):
         mq_push(json.dumps(body))
     else:
         print("delete the body from the queue")
+        mZigbeeAction.done = True
+        mZigbeeAction.save()
 
 

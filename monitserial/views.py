@@ -98,8 +98,8 @@ def serial_change(request):
 
     # push the new job to the rabbitmq
     body = dict()
-    body['english'] = 'Gas'
-    body['newstate'] = 'Normal!'
+    body['english'] = mZigbeeEnglish
+    body['newstate'] = mZigbeeNewState
 
     mq_push(json.dumps(body))
 
@@ -107,5 +107,23 @@ def serial_change(request):
         'err': 'None',
         'message': 'OK',
     })
+
+@csrf_exempt
+def serial_get(request):
+    # get the action
+    # for debug, we only get the change of 'taideng'
+    mZigbeeAction = ZigbeeAction.objects.filter(zigbee__english='taideng', done=False).order_by('-ctime')
+    if mZigbeeAction is None:
+        return JsonResponse({
+            'err': 'there is no action need change',
+        })
+    else:
+        mZigbeeAction = mZigbeeAction[0]
+        return JsonResponse({
+            'err': 'None',
+            'english': mZigbeeAction.zigbee.english,
+            'newstate': mZigbeeAction.newstate,
+        })
+
 
 

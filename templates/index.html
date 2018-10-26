@@ -57,12 +57,7 @@
       {% endif %}
     {% endfor %}
       </p>
-      <div class="ui toggle checkbox">
-        <input type="checkbox" name="gasAction" id="gasAction">
-        <label>改为Normal!</label>
-      </div>
-        <div id="container"></div>
-
+      <div id="container"></div>
       <div class="ui hidden divider"></div>
       <h2 class="ui sub header">
         温湿度传感器
@@ -72,6 +67,12 @@
         Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.
       </p>
       <div class="ui hidden divider"></div>
+      <h2 class="ui sub header">我的台灯</h2>
+      <div class="ui divider"></div>
+      <div class="ui toggle checkbox">
+        <input type="checkbox" name="gasAction" id="gasAction">
+        <label>ON</label>
+      </div>
     </div>
   </div>
 </div>
@@ -204,9 +205,9 @@
             console.log("checked");
             $.post('http://localhost:8000/serial/change/',
               {
-                'english': 'Gas',
+                'english': 'taideng',
                 'action': 'change',
-                'newstate': 'Normal!',
+                'newstate': 'ON',
               },
               function(data) {
                 console.log(data);
@@ -214,6 +215,15 @@
             }
           else {
             console.log("un checked");
+            $.post('http://localhost:8000/serial/change/',
+            {
+              'english': 'taideng',
+              'action': 'change',
+              'newstate': 'OFF',
+            },
+            function(data) {
+              console.log(data);
+            });
             }
         });
 

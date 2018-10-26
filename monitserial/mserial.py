@@ -5,6 +5,7 @@ import time
 
 url = 'http://localhost:8000/serial/push/'
 url_change = 'http://localhost:8000/serial/change/'
+url_get = 'http://localhost:8000/serial/get/'
 mserial = serial.Serial("COM1", 115200)
 
 device_list = [
@@ -35,6 +36,15 @@ else:
     print("open the serial port now")
 
 while True:
+
+    print('*' * 10)
+    # to check the actions of device
+    print("get the actions of device")
+    res = requests.get(url_get)
+    print(res)
+    print('*' * 10)
+
+
     need_push = False
     r_name = None
     r_name_english = None
@@ -65,4 +75,9 @@ while True:
         res = requests.post(url, data=payload)
         print(res)
         print("end the call")
+
+    # to check the actions of device
+    print("get the actions of device")
+    res = requests.get(url_get)
+    print(res)
 
