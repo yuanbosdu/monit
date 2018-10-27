@@ -94,7 +94,7 @@ def serial_change(request):
 
     # create the newaction
     mNewState = ZigbeeAction.objects.create(zigbee=mZigbee, zigbee_state=mZigbeeState, action=mZigbeeAction,
-                                            newstate=mZigbeeState)
+                                            newstate=mZigbeeNewState)
 
     # push the new job to the rabbitmq
     body = dict()
@@ -112,18 +112,25 @@ def serial_change(request):
 def serial_get(request):
     # get the action
     # for debug, we only get the change of 'taideng'
-    mZigbeeAction = ZigbeeAction.objects.filter(zigbee__english='taideng', done=False).order_by('-ctime')
-    if mZigbeeAction is None:
+    mZigbeeAction = ZigbeeAction.objects.filter(zigbee__english='taideng').order_by('-ctime')
+    # print(mZigbeeAction)
+    if len(mZigbeeAction) == 0:
         return JsonResponse({
             'err': 'there is no action need change',
         })
     else:
+        # print(mZigbeeAction)
         mZigbeeAction = mZigbeeAction[0]
-        return JsonResponse({
-            'err': 'None',
-            'english': mZigbeeAction.zigbee.english,
-            'newstate': mZigbeeAction.newstate,
-        })
+        if mZigbeeAction.done is True:
+            return JsonResponse({
+                'err': 'there is no action need change',
+            })
+        else:
+            return JsonResponse({
+                'err': 'None',
+                'english': mZigbeeAction.zigbee.english,
+                'newstate': mZigbeeAction.newstate,
+            })
 
 
 

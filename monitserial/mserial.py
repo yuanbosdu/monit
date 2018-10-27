@@ -2,6 +2,7 @@
 import serial
 import requests
 import time
+import json
 
 url = 'http://localhost:8000/serial/push/'
 url_change = 'http://localhost:8000/serial/change/'
@@ -41,8 +42,23 @@ while True:
     # to check the actions of device
     print("get the actions of device")
     res = requests.get(url_get)
-    print(res)
+    print(res.json())
+    res = res.json()
+
+    if res.get('err') == 'None':
+        print('do the action job')
+        if res.get('english', None) == 'taideng':
+            if res.get('newstate') == 'ON':
+                print('write 1')
+                mserial.write(b'1')
+            else:
+                print('write 0')
+                mserial.write(b'0')
+            print("change the taideng state")
+
     print('*' * 10)
+
+    continue
 
 
     need_push = False
@@ -75,9 +91,4 @@ while True:
         res = requests.post(url, data=payload)
         print(res)
         print("end the call")
-
-    # to check the actions of device
-    print("get the actions of device")
-    res = requests.get(url_get)
-    print(res)
 

@@ -46,6 +46,9 @@ def callback(ch, method, properities, body):
     mZigbeeAction = ZigbeeAction.objects.filter(zigbee=mZigbee).order_by('-ctime')[0]
     print(mZigbeeAction)
 
+    if mZigbeeState is None or mZigbeeAction is None:
+        return
+
     if mZigbeeState.state != mZigbeeAction.newstate:
         print("push the body to the queue again")
         mq_push(json.dumps(body))
