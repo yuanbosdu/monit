@@ -16,6 +16,7 @@ device_list = [
     'Shock',
     'Pir',
     'Humidity:',
+    'Taideng',
 ]
 
 device_name = [
@@ -25,6 +26,7 @@ device_name = [
     'Shock监测',
     'Pir监测'
     '温湿度监测',
+    '台灯',
 ]
 
 def index(request):

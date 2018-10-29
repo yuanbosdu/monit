@@ -3,6 +3,7 @@ import serial
 import requests
 import time
 import json
+import threading
 
 url = 'http://localhost:8000/serial/push/'
 url_change = 'http://localhost:8000/serial/change/'
@@ -16,6 +17,7 @@ device_list = [
     b'Shock',
     b'Pir',
     b'Humidity:',
+    b'Taideng',
 ]
 
 device_name = [
@@ -25,6 +27,7 @@ device_name = [
     'Shock监测',
     'Pir监测',
     '温湿度监测',
+    '台灯',
 ]
 
 print(device_list)
@@ -36,7 +39,55 @@ if mserial.is_open:
 else:
     print("open the serial port now")
 
+
+lock = threading.Lock()
+
+def serial_push():
+    global lock
+    while True:
+        need_push = False
+        r_name = None
+        r_name_english = None
+        r_state = None
+
+        # lock.acquire()
+        text = mserial.readline()
+        # lock.release()
+
+        text = text.split()
+        print(text)
+        if text[0] in device_list:
+            r_name_english = text[0]
+            r_state = text[-1]
+            print(text)
+            print(r_name)
+            print(r_state)
+            print('*' * 10)
+
+            need_push = True
+
+        time.sleep(1)
+
+        if need_push:
+            need_push = False
+            print(r_name_english)
+            payload = {
+                'name': device_name[device_list.index(r_name_english)],
+                'english': r_name_english,
+                'state': r_state,
+            }
+            res = requests.post(url, data=payload)
+            print(res)
+            print("end the call")
+
+
+serial_push_job = threading.Thread(target=serial_push)
+serial_push_job.setDaemon(True)
+serial_push_job.start()
+
 while True:
+
+    # global lock
 
     print('*' * 10)
     # to check the actions of device
@@ -45,50 +96,25 @@ while True:
     print(res.json())
     res = res.json()
 
+    print(res)
+
     if res.get('err') == 'None':
         print('do the action job')
-        if res.get('english', None) == 'taideng':
+        if res.get('english', None) == 'Taideng':
             if res.get('newstate') == 'ON':
                 print('write 1')
+                # lock.acquire()
                 mserial.write(b'1')
+                # lock.release()
             else:
                 print('write 0')
+                # lock.acquire()
                 mserial.write(b'0')
+                # lock.release()
             print("change the taideng state")
-
+    time.sleep(1)
     print('*' * 10)
 
-    continue
 
 
-    need_push = False
-    r_name = None
-    r_name_english = None
-    r_state = None
-    text = mserial.readline()
-    text = text.split()
-    print(text)
-    if text[0] in device_list:
-        r_name_english = text[0]
-        r_state = text[-1]
-        print(text)
-        print(r_name)
-        print(r_state)
-        print('*' * 10)
-
-        need_push = True
-
-    time.sleep(1)
-
-    if need_push:
-        need_push = False
-        print(r_name_english)
-        payload = {
-            'name': device_name[device_list.index(r_name_english)],
-            'english': r_name_english,
-            'state': r_state,
-        }
-        res = requests.post(url, data=payload)
-        print(res)
-        print("end the call")
 

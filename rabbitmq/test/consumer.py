@@ -49,12 +49,12 @@ def callback(ch, method, properities, body):
     if mZigbeeState is None or mZigbeeAction is None:
         return
 
-    if mZigbeeState.state != mZigbeeAction.newstate:
+    if mZigbeeState.state != mZigbeeAction.newstate or mZigbeeState.utime < mZigbeeAction.ctime:
         print("push the body to the queue again")
         mq_push(json.dumps(body))
     else:
         print("delete the body from the queue")
         mZigbeeAction.done = True
         mZigbeeAction.save()
-
+    time.sleep(1)
 

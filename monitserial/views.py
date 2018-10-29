@@ -15,6 +15,7 @@ device_list = [
     'Shock',
     'Pir',
     'Humidity:',
+    'Taideng',
 ]
 
 device_name = [
@@ -24,6 +25,7 @@ device_name = [
     'Shock监测',
     'Pir监测'
     '温湿度监测',
+    '台灯',
 ]
 
 @csrf_exempt
@@ -49,7 +51,7 @@ def serial_push(request):
 
         # insert the new state info to the database
         # check the text must be in "Normal!" or "Alarm!"
-        if zigbee_english != 'Humidity:' and zigbee_state in ['Normal!', 'Alarm!']:
+        if zigbee_english != 'Humidity:' and zigbee_state in ['Normal!', 'Alarm!', 'ON', 'OFF',]:
             mZigbee_state = ZigbeeState.objects.create(zigbee=ob[0], state=zigbee_state)
         if zigbee_english == 'Humidity:':
             mZigbee_state = ZigbeeState.objects.create(zigbee=ob[0], state=zigbee_state)
@@ -76,6 +78,8 @@ def serial_change(request):
     mZigbeeAction = request.POST.get('action', None)
     mZigbeeNewState = request.POST.get('newstate', None)
 
+    print(mZigbeeEnglish)
+
     if mZigbeeEnglish is None or mZigbeeAction is None or mZigbeeNewState is None:
         return JsonResponse({
             'err': 'please input the data',
@@ -83,7 +87,7 @@ def serial_change(request):
 
     # first find the zigbee
     mZigbee = Zigbee.objects.filter(english=mZigbeeEnglish)
-    if mZigbee is None:
+    if len(mZigbee) == 0:
         return  JsonResponse({
             'err': 'there is no zigbee'
         })
@@ -112,7 +116,8 @@ def serial_change(request):
 def serial_get(request):
     # get the action
     # for debug, we only get the change of 'taideng'
-    mZigbeeAction = ZigbeeAction.objects.filter(zigbee__english='taideng').order_by('-ctime')
+    mZigbeeAction = ZigbeeAction.objects.filter(zigbee__english='Taideng').order_by('-ctime')
+
     # print(mZigbeeAction)
     if len(mZigbeeAction) == 0:
         return JsonResponse({
