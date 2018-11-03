@@ -60,8 +60,8 @@ def api_device(request):
             })
         zigbee_device = zigbee_devices[0]
         # we only get the latest 10 records
-        zigbee_state = zigbee_device.state.all().order_by('-utime')[:100]
-        print(zigbee_state)
+        zigbee_state = zigbee_device.state.all().order_by('-utime')[:10]
+        # print(zigbee_state)
         ret = []
         for zs in zigbee_state:
             ret.append((zs.utime.strftime('%m/%d %H:%M:%S'), zs.state))

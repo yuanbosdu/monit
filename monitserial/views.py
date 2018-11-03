@@ -34,7 +34,7 @@ def serial_push(request):
     zigbee_english = request.POST.get('english')
     print(zigbee_name)
     print(zigbee_english)
-    zigbee_state = request.POST.get("state")
+    zigbee_state = request.POST.get("state").strip()
     print(zigbee_state)
 
     if zigbee_english not in device_list:
@@ -51,7 +51,7 @@ def serial_push(request):
 
         # insert the new state info to the database
         # check the text must be in "Normal!" or "Alarm!"
-        if zigbee_english != 'Humidity:' and zigbee_state in ['Normal!', 'Alarm!', 'ON', 'OFF',]:
+        if zigbee_english != 'Humidity:' and zigbee_state in ['Normal!', 'Alarm!', 'ON', 'OFF']:
             mZigbee_state = ZigbeeState.objects.create(zigbee=ob[0], state=zigbee_state)
         if zigbee_english == 'Humidity:':
             mZigbee_state = ZigbeeState.objects.create(zigbee=ob[0], state=zigbee_state)
@@ -117,16 +117,18 @@ def serial_get(request):
     # get the action
     # for debug, we only get the change of 'taideng'
     mZigbeeAction = ZigbeeAction.objects.filter(zigbee__english='Taideng').order_by('-ctime')
+    mZigbeeState = ZigbeeState.objects.filter(zigbee__english='Taideng').order_by('-utime')
 
     # print(mZigbeeAction)
-    if len(mZigbeeAction) == 0:
+    if len(mZigbeeAction) == 0 or len(mZigbeeState) == 0:
         return JsonResponse({
-            'err': 'there is no action need change',
+            'err': 'there is no action or state need change',
         })
     else:
         # print(mZigbeeAction)
         mZigbeeAction = mZigbeeAction[0]
-        if mZigbeeAction.done is True:
+        mZigbeeState = mZigbeeState[0]
+        if mZigbeeAction.done is True or (mZigbeeState.state == mZigbeeAction.newstate):
             return JsonResponse({
                 'err': 'there is no action need change',
             })

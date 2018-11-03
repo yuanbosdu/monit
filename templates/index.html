@@ -15,12 +15,13 @@
     <link href="{% static 'stylesheets/pandoc-code-highlight.css' %}" rel="stylesheet" type="text/css" />
     {# <script src="{% static 'dist/jquery/jquery.min.js' %}"></script> #}
     <script src="https://cdn.bootcss.com/jquery/3.3.1/jquery.min.js"></script>
+    <script src="{% static 'monit/get_state.js' %}"></script>
     <!--[if IE]>
     <script type="text/javascript" src="path/to/flashcanvas.js"></script>
     <![endif]-->
     <script type="text/javascript" src="{% static 'dist/echarts/echarts.min.js' %}"></script>
     <style>
-      #container {
+      #container, #container_pir {
         width : 600px;
         height: 400px;
         margin: 8px auto;
@@ -60,12 +61,12 @@
       <div id="container"></div>
       <div class="ui hidden divider"></div>
       <h2 class="ui sub header">
-        温湿度传感器
+        人体感应传感器
       </h2>
       <div class="ui divider"></div>
       <p>
-        Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Aenean eu leo quam. Pellentesque ornare sem lacinia quam venenatis vestibulum. Sed posuere consectetur est at lobortis. Cras mattis consectetur purus sit amet fermentum.
       </p>
+      <div id="container_pir"></div>
       <div class="ui hidden divider"></div>
       <h2 class="ui sub header">我的台灯</h2>
       <div class="ui divider"></div>
@@ -133,56 +134,11 @@
       (function () {
         var myChart = echarts.init(document.getElementById('container'));
 
+        var myChart_pir = echarts.init(document.getElementById("container_pir"));
 
+        var gas_timer = window.setInterval(gas_get, 1000);
+        var pir_timer = window.setInterval(pir_get, 1000);
 
-
-        $.get('http://localhost:8000/index/api/device/?english=Gas', function(data, status) {
-
-          var xdata = [];
-          var xvalue = [];
-          var i;
-          for (i=0; i<data.length; i++) {
-            xdata.push(data[i][0]);
-            if (data[i][1] == 'Alarm!')
-              xvalue.push(1);
-            else
-              xvalue.push(0);
-          }
-
-          var option = {
-          title: {
-            left: 'center',
-            text: '烟雾状态曲线',
-          },
-          toolbox: {
-            feature: {
-              dataZoom: {
-                  yAxisIndex: 'none'
-              },
-              restore: {},
-              saveAsImage: {}
-            }
-          },
-          legend: {
-            data: ['烟雾状态'],
-          },
-          xAxis: {
-            type: 'category',
-            data: xdata,
-          },
-          yAxis: {
-            type: 'value',
-            boundaryGap: [0, '100%']
-          },
-          series: [{
-            name: '状态',
-            type: 'line',
-            data: xvalue,
-          }],
-          };
-
-          myChart.setOption(option);
-          });
 
 
 
