@@ -56,7 +56,7 @@ def serial_push():
 
         text = text.split()
         print(text)
-        if text[0] in device_list:
+        if len(text) > 0 and text[0] in device_list:
             r_name_english = text[0]
             r_state = text[-1]
             print(text)
@@ -81,9 +81,12 @@ def serial_push():
             print("end the call")
 
 
-serial_push_job = threading.Thread(target=serial_push)
-serial_push_job.setDaemon(True)
-serial_push_job.start()
+joblist = list()
+for i in range(10):
+    j = threading.Thread(target=serial_push)
+    j.setDaemon(True)
+    j.start()
+    joblist.append(j)
 
 while True:
 

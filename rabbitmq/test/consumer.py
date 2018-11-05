@@ -52,9 +52,12 @@ def callback(ch, method, properities, body):
     if mZigbeeState.state != mZigbeeAction.newstate or mZigbeeState.utime < mZigbeeAction.ctime:
         print("push the body to the queue again")
         mq_push(json.dumps(body))
-    else:
+    elif mZigbeeAction.newstate == mZigbeeState.state and mZigbeeState.utime > mZigbeeAction.ctime:
         print("delete the body from the queue")
         mZigbeeAction.done = True
         mZigbeeAction.save()
+    else:
+        print("push the body to the queue again")
+        mq_push(json.dumps(body))
     time.sleep(1)
 

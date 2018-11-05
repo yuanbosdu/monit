@@ -61,7 +61,7 @@ def serial_push(request):
         mZigbee = Zigbee.objects.create(english=zigbee_english, name=zigbee_name)
         # insert the new state info to the database
         # check the text must be in "Normal!" or "Alarm!"
-        if zigbee_english != 'Humidity:' and zigbee_state in ['Normal!', 'Alarm!']:
+        if zigbee_english != 'Humidity:':  # and zigbee_state in ['Normal!', 'Alarm!']:
             mZigbee_state = ZigbeeState.objects.create(zigbee=mZigbee, state=zigbee_state)
         if zigbee_english == 'Humidity:':
             mZigbee_state = ZigbeeState.objects.create(zigbee=mZigbee, state=zigbee_state)
@@ -128,7 +128,7 @@ def serial_get(request):
         # print(mZigbeeAction)
         mZigbeeAction = mZigbeeAction[0]
         mZigbeeState = mZigbeeState[0]
-        if mZigbeeAction.done is True or (mZigbeeState.state == mZigbeeAction.newstate):
+        if mZigbeeAction.done is True:  # or (mZigbeeState.state == mZigbeeAction.newstate):
             return JsonResponse({
                 'err': 'there is no action need change',
             })
