@@ -4,3 +4,4 @@ Celery==4.2.1
 django-celery==3.2.2
 requests==2.19.1
 pika
+anyjson==0.3.3
