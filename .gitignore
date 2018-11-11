@@ -3,4 +3,5 @@
 db.sqlite3
 /*.sqlite3
 __pycache__
-/moint/__pycache__
+/monit/__pycache__
+nohup.out
