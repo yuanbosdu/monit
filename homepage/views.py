@@ -29,6 +29,7 @@ device_name = [
     '台灯',
 ]
 
+
 def index(request):
     gas_device = Zigbee.objects.filter(english='Gas')
     if len(gas_device) == 0:
