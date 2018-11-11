@@ -31,11 +31,11 @@ device_name = [
 
 def index(request):
     gas_device = Zigbee.objects.filter(english='Gas')
-	if len(gas_device) == 0:
-		context = {
-			'gas_state': [],
-		}
-		return render(request, "index.html", context=context)
+    if len(gas_device) == 0:
+        context = {
+            'gas_state': [],
+        }
+        return render(request, "index.html", context=context)
     gas_device = gas_device[0]
     context = {
         'gas_state': [],
