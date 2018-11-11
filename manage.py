@@ -1,9 +1,11 @@
 #!/usr/bin/env python
 import os
 import sys
+#add the path
+sys.path.append('/opt/monit')
 
 if __name__ == "__main__":
-    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "moint.settings")
+    os.environ.setdefault("DJANGO_SETTINGS_MODULE", "monit.settings")
     try:
         from django.core.management import execute_from_command_line
     except ImportError as exc:
