@@ -16,10 +16,13 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path, re_path
 from django.urls import include
+from homepage import views
 urlpatterns = [
     re_path('^$', include('homepage.urls')),
     path('index/', include('homepage.urls')),
     path('serial/', include('monitserial.urls')),
     path('rabbitmq/', include('rabbitmq.urls')),
     path('admin/', admin.site.urls),
+
+    path('user/index/', views.user_index, name='user_index'),
 ]

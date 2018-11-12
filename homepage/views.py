@@ -51,6 +51,11 @@ def index(request):
     return render(request, "index.html", context=context)
 
 
+def user_index(request):
+
+    return render(request, 'user/index.html')
+
+
 @csrf_exempt
 def api_device(request):
     if request.method == 'GET':
