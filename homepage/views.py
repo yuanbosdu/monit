@@ -2,6 +2,11 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from zigbee.models import Zigbee, ZigbeeState
+from django.contrib.auth.models import User
+from django.contrib.auth import login, logout
+from django.db.models import Q
+from django.conf import settings
+from django.shortcuts import redirect
 from datetime import datetime
 import time
 
@@ -55,6 +60,45 @@ def user_index(request):
 
     return render(request, 'user/index.html')
 
+
+@csrf_exempt
+def user_signin(request):
+    context = dict(err=None)
+    if request.method == 'POST':
+        print('#post')
+        user_name = request.POST.get('name', None)
+        user_password = request.POST.get('password', None)
+        if user_name is None:
+            context['err'] = '请输入邮箱 或 用户名'
+        elif user_password is None:
+            context['err'] = '请输入登陆密码'
+        else:
+            user = User.objects.filter(Q(username=user_name) | Q(email=user_name))
+            if user.count() == 0:
+                context['err'] = '请输入正确的邮箱 或 用户名'
+            else:
+                user = user[0]
+                if user.check_password(user_password):
+                    # login success
+                    login(request, user)
+                    context.update(redirect=settings.WEBSITE + '/index/')
+                else:
+                    context['err'] = '请输入正确的登陆密码'
+        return JsonResponse(context)
+
+    return render(request, 'user/signin.html', context=context)
+
+
+def user_signup(request):
+
+    return render(request, 'user/signup.html')
+
+
+def user_signout(request):
+
+    logout(request)
+
+    return redirect('/index/')
 
 @csrf_exempt
 def api_device(request):

@@ -24,8 +24,13 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = '2_8(+o*ilb65tuqm)gh@k1y@xx$k1vibo(7+f@k3v%m$*8t)ht'
 
+WEBSITE = 'http://localhost:8000'
+
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
+
+# RABBITMQ switch button
+RABBITMQ = False
 
 ALLOWED_HOSTS = [
     '*',

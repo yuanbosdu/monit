@@ -30,7 +30,20 @@
   </head>
   <body><div class="ui borderless fixed blue inverted pointing menu">
   <div class="ui container">
-    <a class="header active item" href="blog.html#">Home</a><a class="item" href="blog.html#">New feature</a><a class="item" href="blog.html#">Press</a><a class="item" href="blog.html#">New hires</a><a class="item" href="blog.html#">About</a>
+    <a class="header active item" href="/index/#">监测宝</a>
+    <a class="item" href="/index/#">产品</a>
+    <a class="item" href="/index/#">解决方案</a>
+    <a class="item" href="/index/#">智能硬件</a>
+    <a class="item" href="/index/#">关于我们</a>
+    <div class="right menu">
+      <div class="item hiddenui">
+        {% if request.user.is_authenticated %}
+        <a class="ui green button" href="/user/signout/">退出</a>
+        {% else %}
+        <a class="ui green button" href="/user/signin/">登陆</a>
+        {% endif %}
+      </div>
+    </div>
   </div>
 </div>
 <div class="ui grid container">
