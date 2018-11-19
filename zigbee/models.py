@@ -1,9 +1,10 @@
 from django.db import models
-
+import uuid
 # Create your models here.
 
 
 class Zigbee(models.Model):
+    uuid = models.UUIDField(default=uuid.uuid1(), blank=True, null=True)
     name = models.CharField(max_length=50)
     english = models.CharField(max_length=50, null=True, blank=True)
     desc = models.TextField(blank=True, null=True)
