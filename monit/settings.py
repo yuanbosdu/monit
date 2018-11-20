@@ -32,6 +32,9 @@ DEBUG = True
 # RABBITMQ switch button
 RABBITMQ = False
 
+# user login website
+LOGIN_URL = '/user/signin/'
+
 ALLOWED_HOSTS = [
     '*',
 ]

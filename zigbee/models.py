@@ -18,6 +18,7 @@ class Zigbee(models.Model):
 
 class ZigbeeState(models.Model):
     zigbee = models.ForeignKey(Zigbee, on_delete=models.CASCADE, related_name='state')
+    state_type = models.CharField(max_length=50)
     state = models.CharField(max_length=50, default="normal")
     utime = models.DateTimeField(auto_now=True, auto_created=True)
 

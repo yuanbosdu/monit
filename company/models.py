@@ -14,6 +14,9 @@ class Company(models.Model):
     extra = models.TextField(null=True, blank=True)
     ctime = models.DateTimeField(auto_now=True)
 
+    def __str__(self):
+        return "%s" % self.name
+
 
 # model device
 class Device(models.Model):
@@ -26,6 +29,9 @@ class Device(models.Model):
     dtype_uuid = models.CharField(max_length=50)  # this is uuid of dtype
     ctime = models.DateTimeField(models.DateTimeField, auto_now=True)
 
+    def __str__(self):
+        return "%s" % self.name
+
 
 # model user property
 class UserInfo(models.Model):
@@ -33,6 +39,9 @@ class UserInfo(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
     phone = models.CharField(max_length=50)
     permission = models.CharField(max_length=200)   # simple permission management
+
+    def __str__(self):
+        return "%s" % self.permission
 
 
 # secret key management
@@ -43,3 +52,5 @@ class SecretKey(models.Model):
     company = models.ForeignKey(Company, on_delete=models.CASCADE)
     mtime = models.DateTimeField(auto_now=True) # modify time
 
+    def __str__(self):
+        return "%s" % self.AES

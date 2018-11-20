@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from zigbee.models import Zigbee, ZigbeeState
 from django.contrib.auth.models import User
 from django.contrib.auth import login, logout
+from django.contrib.auth.decorators import login_required
 from django.db.models import Q
 from django.conf import settings
 from django.shortcuts import redirect
@@ -56,6 +57,7 @@ def index(request):
     return render(request, "index.html", context=context)
 
 
+@login_required
 def user_index(request):
 
     return render(request, 'user/index.html')
@@ -64,8 +66,8 @@ def user_index(request):
 @csrf_exempt
 def user_signin(request):
     context = dict(err=None)
+
     if request.method == 'POST':
-        print('#post')
         user_name = request.POST.get('name', None)
         user_password = request.POST.get('password', None)
         if user_name is None:
@@ -81,7 +83,7 @@ def user_signin(request):
                 if user.check_password(user_password):
                     # login success
                     login(request, user)
-                    context.update(redirect=settings.WEBSITE + '/index/')
+                    context.update(redirect=settings.WEBSITE + '/user/index/')
                 else:
                     context['err'] = '请输入正确的登陆密码'
         return JsonResponse(context)

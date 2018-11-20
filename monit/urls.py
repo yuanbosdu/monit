@@ -17,6 +17,7 @@ from django.contrib import admin
 from django.urls import path, re_path
 from django.urls import include
 from homepage import views
+from company import views as cviews
 urlpatterns = [
     re_path('^$', include('homepage.urls')),
     path('index/', include('homepage.urls')),
@@ -28,4 +29,6 @@ urlpatterns = [
     path('user/signin/', views.user_signin, name='user_signin'),
     path('user/signout/', views.user_signout, name='user_signout'),
     path('user/signup/', views.user_signup, name='user_signup'),
+    path('user/device/list', cviews.device_list_view, name='device_list'),
+    path('user/device/add', cviews.device_add_view, name='device_add'),
 ]
