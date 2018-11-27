@@ -1,5 +1,42 @@
 {% extends 'user/base.html' %}
 {% block main %}
-<div class="mainWrap navslide">
+<div class="ui equal width left aligned padded grid stackable">
+    <div class="ui row">
+        <div class="ui sixteen wide column">
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h5 class="ui header">
+                        设备列表
+                    </h5>
+                </div>
+                <div class="ui segment">
+                    <div class="ui ten stackable cards">
+                        {% for i in devicelist %}
+                        <div class="ui card">
+                            <div class="image">
+                                <img src="" data-src="" class="transition visible">
+                                <div class="content">
+                                    <a class="header">one</a>
+                                    <div class="meta">
+                                        <span class="date">Joined in 2011</span>
+                                    </div>
+                                    <div class="description">
+                                        description
+                                    </div>
+                                </div>
+                                <div class="extra content">
+                                    <div class="ui two buttons">
+                                        <div class="ui basic green button">查看</div>
+                                        <div class="ui basic red button">删除</div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
 {% endblock %}

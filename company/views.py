@@ -6,12 +6,23 @@ from django.http import request, response
 
 @login_required
 def device_list_view(request):
-    pass
+    context = dict()
+    devicelist = list()
+    for n in range(100):
+        devicelist.append(n)
+    context.update(devicelist=devicelist)
 
-    return render(request, 'user/devicelist.html')
+    return render(request, 'user/devicelist.html', context=context)
 
 
 @login_required
 def device_add_view(request):
 
     return render(request, 'user/deviceadd.html')
+
+
+@login_required
+def keymaster_view(request):
+
+    return render(request, 'user/keymaster.html')
+

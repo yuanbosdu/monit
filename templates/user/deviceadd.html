@@ -1,4 +1,61 @@
 {% extends 'user/base.html' %}
 {% block main %}
-lkjhgfd
+<div class="ui equal width left aligned padded grid stackable">
+    <div class="ui row">
+        <div class="ui sixteen wide column">
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h5 class="ui header">
+                        增加设备
+                    </h5>
+                </div>
+                <div class="ui segment">
+                    <div class="ui one column middle aligned very relaxed stackable grid">
+                        <div class="column">
+                            <div class="ui form">
+                                <div class="field">
+                                    <label>设备名称</label>
+                                    <div class="ui left icon input">
+                                        <input type="text" placeholder="设备名称">
+                                        <i class="user icon"></i>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label>设备描述</label>
+                                    <div class="ui left icon input">
+                                        <input type="text" placeholder="设备描述">
+                                        <i class="user icon"></i>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label>设备类型</label>
+                                    <div class="ui input">
+                                        <select class="ui compact selection dropdown">
+                                            <option value="one">压力传感器</option>
+                                            <option value="two">PM2.5传感器</option>
+                                            <option selected="" value="three">CO2传感器</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <label>传输协议</label>
+                                    <div class="ui input">
+                                        <select class="ui compact selection dropdown">
+                                            <option value="one">Zigbee</option>
+                                            <option value="two">lora</option>
+                                            <option value="three">none</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="field">
+                                    <div class="ui blue submit button">提交</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
 {% endblock %}

@@ -1,0 +1,35 @@
+{% extends 'user/base.html' %}
+{% block main %}
+<div class="ui equal width left aligned padded grid stackable">
+    <div class="ui row">
+        <div class="ui sixteen wide column">
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h5 class="ui header">
+                        正在使用的密钥
+                    </h5>
+                </div>
+                <div class="ui segment">
+                    <div class="ui divided selection list">
+                        <a class="item">
+                            <div class="ui red horizontal label">AES Key</div>
+                            123456
+                        </a>
+                        <a class="item">
+                            <div class="ui purple horizontal label">RSA Private</div>
+                            123456
+                        </a>
+                        <a class="item">
+                            <div class="ui red horizontal label">RSA Public</div>
+                            123456
+                        </a>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <div class="ui basic red button">重置密钥</div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
