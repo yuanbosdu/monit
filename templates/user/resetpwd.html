@@ -1,0 +1,44 @@
+{% extends 'user/base.html' %}
+{% block main %}
+<div class="ui equal width left aligned padded grid stackable">
+    <div class="ui row">
+        <div class="ui sixteen wide column">
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h5 class="ui header">
+                        重置用户密码
+                    </h5>
+                </div>
+                <div class="ui segment">
+                    <div class="ui form">
+                        <div class="field">
+                            <label>用户名</label>
+                            <div class="ui left icon input">
+                                <input type="text" placeholder="user name">
+                                <i class="user icon"></i>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>新密码</label>
+                            <div class="ui left icon input">
+                                <input type="password" placeholder="new password">
+                                <i class="hide icon"></i>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>再输遍密码</label>
+                            <div class="ui left icon input">
+                                <input type="password" placeholder="input password again">
+                                <i class="hide icon"></i>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <button class="ui basic red button">重置密码</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

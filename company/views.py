@@ -26,3 +26,26 @@ def keymaster_view(request):
 
     return render(request, 'user/keymaster.html')
 
+
+@login_required
+def userlist_view(request):
+
+    return render(request, 'user/userlist.html')
+
+
+@login_required
+def useradd_view(request):
+
+    return render(request, 'user/useradd.html')
+
+
+@login_required
+def user_resetpwd_view(request):
+
+    return render(request, 'user/resetpwd.html')
+
+
+@login_required
+def user_permission_view(request):
+
+    return render(request, 'user/permission.html')

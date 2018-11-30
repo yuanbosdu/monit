@@ -1,0 +1,34 @@
+{% extends 'user/base.html' %}
+{% block main %}
+<div class="ui equal width left aligned padded grid stackable">
+    <div class="ui row">
+        <div class="ui fourteen wide column">
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h5 class="ui header">
+                        用户列表
+                    </h5>
+                </div>
+                <div class="ui segment">
+                    <table class="ui selectable celled table">
+                        <thead>
+                        <tr>
+                            <th>User Name</th>
+                            <th>Email</th>
+                            <th>Action</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        <tr>
+                            <td>yuanbo</td>
+                            <td>yuanbosdu@163.com</td>
+                            <td><button class="ui basic primary button">重置密码</button> </td>
+                        </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,41 @@
+{% extends 'user/base.html' %}
+{% block main %}
+<div class="ui equal width left aligned padded grid stackable">
+    <div class="ui row">
+        <div class="ui fourteen wide column">
+            <div class="ui segments">
+                <div class="ui segment">
+                    <h5 class="ui header">
+                        权限管理
+                    </h5>
+                </div>
+                <div class="ui segment">
+                    <div class="ui form">
+                        <div class="field">
+                            <label>用户名</label>
+                            <div class="ui input">
+                                <select class="ui compact selection dropdown">
+                                    <option value="one">yuanbo</option>
+                                    <option value="two">two</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <label>权限组</label>
+                            <div class="ui input">
+                                <select class="ui compact selection dropdown">
+                                    <option value="one">one</option>
+                                    <option value="two">two</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="field">
+                            <button class="ui primary red button">更改权限</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
