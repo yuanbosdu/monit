@@ -14,26 +14,26 @@
                         <div class="field">
                             <label>用户名</label>
                             <div class="ui left icon input">
-                                <input type="text" placeholder="user name">
+                                <input name="user_name" type="text" placeholder="user name">
                                 <i class="user icon"></i>
                             </div>
                         </div>
                         <div class="field">
                             <label>邮箱</label>
                             <div class="ui left icon input">
-                                <input type="text" placeholder="email">
+                                <input name="user_email" type="text" placeholder="email">
                                 <i class="mail icon"></i>
                             </div>
                         </div>
                         <div class="field">
                             <label>初始密码</label>
                             <div class="ui left icon input">
-                                <input type="password" placeholder="password">
+                                <input name="user_password" type="password" placeholder="password">
                                 <i class="hide icon"></i>
                             </div>
                         </div>
                         <div class="field">
-                            <button class="ui basic primary button">增加</button>
+                            <button id="btn_add_user" class="ui basic primary button">增加</button>
                         </div>
                     </div>
                 </div>
@@ -41,4 +41,16 @@
         </div>
     </div>
 </div>
+<script>
+    $(function(){
+        $("#btn_add_user").on('click', function() {
+            let user_name = $("input[name='user_name']").val();
+            let user_email = $("input[name='user_email']").val();
+            let user_password = $("input[name='user_password']").val();
+            console.log(user_name);
+            console.log(user_email);
+            console.log(user_password);
+            });
+        });
+</script>
 {% endblock %}
