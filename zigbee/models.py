@@ -6,7 +6,7 @@ import uuid
 class Zigbee(models.Model):
     uuid = models.UUIDField(default=uuid.uuid1(), blank=True, null=True)
     name = models.CharField(max_length=50)
-    english = models.CharField(max_length=50, null=True, blank=True)
+    ename = models.CharField(max_length=50, null=True, blank=True)
     desc = models.TextField(blank=True, null=True)
     address = models.CharField(max_length=50, blank=True, null=True)
     ctime = models.DateTimeField(auto_now=True)

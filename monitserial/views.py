@@ -31,18 +31,19 @@ device_name = [
 @csrf_exempt
 def serial_push(request):
     zigbee_name = request.POST.get("name")
-    zigbee_english = request.POST.get('english')
+    zigbee_ename = request.POST.get('ename')
+    print("serial push logs")
     print(zigbee_name)
-    print(zigbee_english)
-    zigbee_state = request.POST.get("state").strip()
+    print(zigbee_ename)
+    zigbee_state = request.POST.get("state")
     print(zigbee_state)
 
-    if zigbee_english not in device_list:
+    if zigbee_ename not in device_list:
         print("Unexpect device name")
         return  HttpResponse('Unexpect device')
 
     #first get the object
-    ob = Zigbee.objects.filter(english=zigbee_english)
+    ob = Zigbee.objects.filter(ename=zigbee_ename)
     print(ob)
     print(len(ob))
     if len(ob) != 0:
@@ -51,19 +52,19 @@ def serial_push(request):
 
         # insert the new state info to the database
         # check the text must be in "Normal!" or "Alarm!"
-        if zigbee_english != 'Humidity:' and zigbee_state in ['Normal!', 'Alarm!', 'ON', 'OFF']:
+        if zigbee_ename != 'Humidity:' and zigbee_state in ['Normal!', 'Alarm!', 'ON', 'OFF']:
             mZigbee_state = ZigbeeState.objects.create(zigbee=ob[0], state=zigbee_state)
-        if zigbee_english == 'Humidity:':
+        if zigbee_ename == 'Humidity:':
             mZigbee_state = ZigbeeState.objects.create(zigbee=ob[0], state=zigbee_state)
 
     else:
         # create the new object
-        mZigbee = Zigbee.objects.create(english=zigbee_english, name=zigbee_name)
+        mZigbee = Zigbee.objects.create(ename=zigbee_ename, name=zigbee_name)
         # insert the new state info to the database
         # check the text must be in "Normal!" or "Alarm!"
-        if zigbee_english != 'Humidity:':  # and zigbee_state in ['Normal!', 'Alarm!']:
+        if zigbee_ename != 'Humidity:':  # and zigbee_state in ['Normal!', 'Alarm!']:
             mZigbee_state = ZigbeeState.objects.create(zigbee=mZigbee, state=zigbee_state)
-        if zigbee_english == 'Humidity:':
+        if zigbee_ename == 'Humidity:':
             mZigbee_state = ZigbeeState.objects.create(zigbee=mZigbee, state=zigbee_state)
         print('add the new record in the database')
     return HttpResponse('OK')
@@ -74,19 +75,19 @@ import json
 @csrf_exempt
 def serial_change(request):
     mZigbeeName = request.POST.get('name', None)
-    mZigbeeEnglish = request.POST.get('english', None)
+    mZigbeeEname = request.POST.get('ename', None)
     mZigbeeAction = request.POST.get('action', None)
     mZigbeeNewState = request.POST.get('newstate', None)
 
-    print(mZigbeeEnglish)
+    print(mZigbeeEname)
 
-    if mZigbeeEnglish is None or mZigbeeAction is None or mZigbeeNewState is None:
+    if mZigbeeEname is None or mZigbeeAction is None or mZigbeeNewState is None:
         return JsonResponse({
             'err': 'please input the data',
         })
 
     # first find the zigbee
-    mZigbee = Zigbee.objects.filter(english=mZigbeeEnglish)
+    mZigbee = Zigbee.objects.filter(ename=mZigbeeEname)
     if len(mZigbee) == 0:
         return  JsonResponse({
             'err': 'there is no zigbee'
@@ -102,7 +103,7 @@ def serial_change(request):
 
     # push the new job to the rabbitmq
     body = dict()
-    body['english'] = mZigbeeEnglish
+    body['ename'] = mZigbeeEname
     body['newstate'] = mZigbeeNewState
 
     mq_push(json.dumps(body))
@@ -116,8 +117,8 @@ def serial_change(request):
 def serial_get(request):
     # get the action
     # for debug, we only get the change of 'taideng'
-    mZigbeeAction = ZigbeeAction.objects.filter(zigbee__english='Taideng').order_by('-ctime')
-    mZigbeeState = ZigbeeState.objects.filter(zigbee__english='Taideng').order_by('-utime')
+    mZigbeeAction = ZigbeeAction.objects.filter(zigbee__ename='Taideng').order_by('-ctime')
+    mZigbeeState = ZigbeeState.objects.filter(zigbee__ename='Taideng').order_by('-utime')
 
     # print(mZigbeeAction)
     if len(mZigbeeAction) == 0 or len(mZigbeeState) == 0:
@@ -135,7 +136,7 @@ def serial_get(request):
         else:
             return JsonResponse({
                 'err': 'None',
-                'english': mZigbeeAction.zigbee.english,
+                'english': mZigbeeAction.zigbee.ename,
                 'newstate': mZigbeeAction.newstate,
             })
 

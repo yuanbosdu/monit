@@ -73,7 +73,7 @@ def serial_push():
             print(r_name_english)
             payload = {
                 'name': device_name[device_list.index(r_name_english)],
-                'english': r_name_english,
+                'ename': r_name_english,
                 'state': r_state,
             }
             res = requests.post(url, data=payload)
@@ -103,7 +103,7 @@ while True:
 
     if res.get('err') == 'None':
         print('do the action job')
-        if res.get('english', None) == 'Taideng':
+        if res.get('ename', None) == 'Taideng':
             if res.get('newstate') == 'ON':
                 print('write 1')
                 # lock.acquire()

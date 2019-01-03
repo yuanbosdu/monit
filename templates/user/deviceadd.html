@@ -16,23 +16,23 @@
                                 <div class="field">
                                     <label>设备名称</label>
                                     <div class="ui left icon input">
-                                        <input type="text" placeholder="设备名称">
+                                        <input name="device_name" type="text" placeholder="设备名称">
                                         <i class="user icon"></i>
                                     </div>
                                 </div>
                                 <div class="field">
                                     <label>设备描述</label>
                                     <div class="ui left icon input">
-                                        <input type="text" placeholder="设备描述">
+                                        <input name="device_description" type="text" placeholder="设备描述">
                                         <i class="user icon"></i>
                                     </div>
                                 </div>
                                 <div class="field">
                                     <label>设备类型</label>
                                     <div class="ui input">
-                                        <select class="ui compact selection dropdown">
+                                        <select id="device_type" class="ui compact selection dropdown">
                                             <option value="one">压力传感器</option>
-                                            <option value="two">PM2.5传感器</option>
+                                            <option value="PM25">PM2.5传感器</option>
                                             <option selected="" value="three">CO2传感器</option>
                                         </select>
                                     </div>
@@ -40,15 +40,15 @@
                                 <div class="field">
                                     <label>传输协议</label>
                                     <div class="ui input">
-                                        <select class="ui compact selection dropdown">
-                                            <option value="one">Zigbee</option>
+                                        <select id="device_protocol" class="ui compact selection dropdown">
+                                            <option value="zigbee">Zigbee</option>
                                             <option value="two">lora</option>
                                             <option value="three">none</option>
                                         </select>
                                     </div>
                                 </div>
                                 <div class="field">
-                                    <div class="ui blue submit button">提交</div>
+                                    <div id="btn_submit" class="ui blue submit button">提交</div>
                                 </div>
                             </div>
                         </div>
@@ -58,4 +58,21 @@
         </div>
     </div>
 </div>
+<script>
+    $(function() {
+        $('#btn_submit').on('click', function() {
+            var device_name = $(":input[name='device_name']").val()
+            var device_description = $(":input[name='device_description']").val()
+            var device_type = $('#device_type').find('option:selected').val()
+            var device_protocol = $('#device_protocol').find('option:selected').val()
+            console.log(device_name)
+            console.log(device_description)
+            console.log(device_type)
+            console.log(device_protocol)
+
+            $.post('/user/device/add', 
+
+        })
+    })
+</script>
 {% endblock %}

@@ -37,7 +37,7 @@ device_name = [
 
 
 def index(request):
-    gas_device = Zigbee.objects.filter(english='Gas')
+    gas_device = Zigbee.objects.filter(ename='Gas')
     if len(gas_device) == 0:
         context = {
             'gas_state': [],
@@ -105,12 +105,12 @@ def user_signout(request):
 @csrf_exempt
 def api_device(request):
     if request.method == 'GET':
-        device_english = request.GET.get('english', None)
-        if device_english is None:
+        device_ename = request.GET.get('ename', None)
+        if device_ename is None:
             return JsonResponse({
                 'code': 'Unexpect device',
             })
-        zigbee_devices = Zigbee.objects.filter(english=device_english)
+        zigbee_devices = Zigbee.objects.filter(ename=device_ename)
         if len(zigbee_devices) == 0:
             return JsonResponse({
                 'code': 'No record',
