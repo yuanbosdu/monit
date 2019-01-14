@@ -79,6 +79,8 @@
                 },
                 function(data) {
                     console.log(data);
+                    if (data.err == 'None')
+                        window.location.href = '/user/device/list';
                 }
             )
 

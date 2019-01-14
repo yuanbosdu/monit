@@ -11,9 +11,7 @@ from zigbee.models import Zigbee
 @login_required
 def device_list_view(request):
     context = dict()
-    devicelist = list()
-    for n in range(100):
-        devicelist.append(n)
+    devicelist = Device.objects.all()
     context.update(devicelist=devicelist)
 
     return render(request, 'user/devicelist.html', context=context)
@@ -28,8 +26,10 @@ def device_add_view(request):
         description = request.POST.get('description', None)
         dtype = request.POST.get('dtype', None)
         dprotocol = request.POST.get('dprotocol', None)
-
-        if name is None or description is None or dtype is None or dprotocol is None:
+        
+        print(name, description, dtype, dprotocol)
+        
+        if name is None or name == '' or description is None or  description == '' or dtype is None or dtype == '' or dprotocol is None or dprotocol == '':
             return JsonResponse(dict(err='input the data'))
 
         # print(name, description, dtype, dprotocol)
