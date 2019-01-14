@@ -70,7 +70,18 @@
             console.log(device_type)
             console.log(device_protocol)
 
-            $.post('/user/device/add', 
+            $.post('/user/device/add',
+                {
+                    'name':device_name,
+                    'description':device_description,
+                    'dtype':device_type,
+                    'dprotocol':device_protocol,
+                },
+                function(data) {
+                    console.log(data);
+                }
+            )
+
 
         })
     })

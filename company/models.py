@@ -26,6 +26,7 @@ class Device(models.Model):
     longitude = models.CharField(max_length=10, blank=True, null=True)
     latitude = models.CharField(max_length=10, blank=True, null=True)
     dtype = models.CharField(max_length=50)
+    dprotocol = models.CharField(max_length=50)
     dtype_uuid = models.CharField(max_length=50)  # this is uuid of dtype
     ctime = models.DateTimeField(models.DateTimeField, auto_now=True)
 
