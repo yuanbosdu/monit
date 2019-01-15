@@ -27,7 +27,7 @@
                                 <div class="extra content">
                                     <div class="ui two buttons">
                                         <div class="ui basic green button">查看</div>
-                                        <div class="ui basic red button">删除</div>
+                                        <div data-id='{{ i.id }}' class="ui basic red button">删除</div>
                                     </div>
                                 </div>
                             </div>
@@ -39,4 +39,30 @@
         </div>
     </div>
 </div>
+<div class="ui confirm modal">
+        <div class="header">
+            Delete Your Account
+        </div>
+        <div class="content">
+            <p>Are you sure you want to delete your account</p>
+        </div>
+        <div class="actions">
+            <div class="ui negative button">
+                No
+            </div>
+            <div class="ui positive right labeled icon button">
+                Yes
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+</div>
+<script type='text/javascript'>
+    $(function(){
+        $(".ui.basic.red.button").on('click', function() {
+            var id = $(this).attr('data-id');
+            console.log(id);
+            $('.ui.confirm.modal').modal('show')
+        })
+    })
+</script>
 {% endblock %}

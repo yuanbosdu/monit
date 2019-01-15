@@ -9,7 +9,18 @@ from zigbee.models import Zigbee
 
 
 @login_required
+@csrf_exempt
 def device_list_view(request):
+    if request.method == 'POST':
+        method = request.POST.get('method', 'delete')
+        if method == 'delete':
+            device_id = request.POST.get('id')
+            mdevice = Device.objects.get(id=device_id)
+            uuid = mdevice.dtype_uuid
+            if mdevice.dprotocol == 'zigbee':
+                mzigbee = Zigbee.objects.filter(uuid=uuid).delete()
+            mdevice.delete()
+        return JsonResponse(dict(msg='OK'))
     context = dict()
     devicelist = Device.objects.all()
     context.update(devicelist=devicelist)
