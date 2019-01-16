@@ -50,7 +50,7 @@
             <div class="ui negative button">
                 No
             </div>
-            <div class="ui positive right labeled icon button">
+            <div data-id="" class="ui positive right labeled icon button">
                 Yes
                 <i class="checkmark icon"></i>
             </div>
@@ -61,7 +61,20 @@
         $(".ui.basic.red.button").on('click', function() {
             var id = $(this).attr('data-id');
             console.log(id);
-            $('.ui.confirm.modal').modal('show')
+            $('.ui.confirm.modal').modal('show');
+            $('.ui.positive.right.labeled.icon.button').attr('data-id', id);
+        })
+        $('.ui.positive.right.labeled.icon.button').on('click', function() {
+            var id = $(this).attr('data-id');
+            console.log(id);
+            $.post('/user/device/list',
+                {
+                "id": id,
+                },
+                function(data) {
+                    console.log(data);
+                }
+            )
         })
     })
 </script>

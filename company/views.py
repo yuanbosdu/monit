@@ -15,6 +15,7 @@ def device_list_view(request):
         method = request.POST.get('method', 'delete')
         if method == 'delete':
             device_id = request.POST.get('id')
+            print(device_id)
             mdevice = Device.objects.get(id=device_id)
             uuid = mdevice.dtype_uuid
             if mdevice.dprotocol == 'zigbee':
