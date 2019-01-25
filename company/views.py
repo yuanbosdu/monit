@@ -4,7 +4,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import request, response
 # Create your views here.
 from django.http.response import JsonResponse
-from .models import Device
+from .models import Company, Device, SecretKey
 from zigbee.models import Zigbee
 
 
@@ -25,6 +25,10 @@ def device_list_view(request):
     context = dict()
     devicelist = Device.objects.all()
     context.update(devicelist=devicelist)
+    if len(devicelist) == 0:
+        context.update(len=0)
+    else:
+        context.update(len=devicelist)
 
     return render(request, 'user/devicelist.html', context=context)
 
@@ -56,10 +60,32 @@ def device_add_view(request):
     return render(request, 'user/deviceadd.html')
 
 
+import random
+import string
+import rsa
 @login_required
 def keymaster_view(request):
-
-    return render(request, 'user/keymaster.html')
+    if request.method == 'GET':
+        mUser = request.user
+        mCompany = Company.objects.filter(admin__username=mUser)[0]
+        mSecretKey = SecretKey.objects.filter(company=mCompany)
+        if mCompany is not None and len(mSecretKey) is 0:
+            mAes = ''.join(random.sample(string.ascii_letters, 16))
+            print(mAes)
+            (mPub, mPri) = rsa.newkeys(128)
+            mSecretKey = SecretKey.objects.create(
+                AES=mAes,
+                RSA_Public=mPub,
+                RSA_Private=mPri,
+                company=mCompany)
+            context = dict(
+                sk=mSecretKey
+            )
+        else:
+            context = dict(
+                sk=mSecretKey[0]
+            )
+        return render(request, 'user/keymaster.html', context=context)
 
 
 @login_required

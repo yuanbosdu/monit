@@ -10,7 +10,10 @@
                     </h5>
                 </div>
                 <div class="ui segment">
-                    <div class="ui ten stackable cards">
+                    <div class="ui four stackable cards">
+                        {% if len == 0 %}
+                            当前设备为空，请首先增加新设备
+                        {% else %}
                         {% for i in devicelist %}
                         <div class="ui card">
                             <div class="image">
@@ -18,10 +21,13 @@
                                 <div class="content">
                                     <a class="header">{{ i.name }}</a>
                                     <div class="meta">
-                                        <span class="date">Joined in 2011</span>
+                                        <span class="date">Joined in {{ i.ctime|date:'Y/m/d H:i:s' }}</span>
                                     </div>
                                     <div class="description">
-                                        description
+                                        {{ i.description }}
+                                    </div>
+                                    <div class="meta">
+                                        {{ i.dtype_uuid }}
                                     </div>
                                 </div>
                                 <div class="extra content">
@@ -33,6 +39,7 @@
                             </div>
                         </div>
                         {% endfor %}
+                        {% endif %}
                     </div>
                 </div>
             </div>
@@ -73,6 +80,7 @@
                 },
                 function(data) {
                     console.log(data);
+                    window.location.reload(true);
                 }
             )
         })
