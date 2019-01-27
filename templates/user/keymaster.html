@@ -32,4 +32,50 @@
         </div>
     </div>
 </div>
+<div class="ui confirm modal">
+        <div class="ui hidden">
+            {% csrf_token %}
+        </div>
+        <div class="header">
+            Delete Your Account
+        </div>
+        <div class="content">
+            <p>Are you sure you want to delete your account</p>
+        </div>
+        <div class="actions">
+            <div class="ui negative button">
+                No
+            </div>
+            <div id="confirm" data-id="" class="ui positive right labeled icon button">
+                Yes
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+</div>
+<script type="text/javascript">
+    $(function () {
+        $('.ui.basic.red.button').on('click', function () {
+            console.log('reset button click');
+            $('.ui.confirm.modal').modal('show');
+        })
+        $('#confirm').on('click', function () {
+            console.log('confirm button click');
+            $.ajaxSetup({
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }
+            })
+            $.post(
+                '/user/keymaster/',
+                {
+                    'reset': true
+                },
+                function (data) {
+                    console.log(data);
+                    window.location.reload(true);
+                }
+            )
+        })
+    })
+</script>
 {% endblock %}

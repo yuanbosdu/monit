@@ -6,7 +6,9 @@ from django.http import request, response
 from django.http.response import JsonResponse
 from .models import Company, Device, SecretKey
 from zigbee.models import Zigbee
-
+import random
+import string
+import rsa
 
 @login_required
 @csrf_exempt
@@ -60,9 +62,18 @@ def device_add_view(request):
     return render(request, 'user/deviceadd.html')
 
 
-import random
-import string
-import rsa
+def generator(mCompany):
+    mAes = ''.join(random.sample(string.ascii_letters, 16))
+    print(mAes)
+    (mPub, mPri) = rsa.newkeys(128)
+    mSecretKey = SecretKey.objects.create(
+        AES=mAes,
+        RSA_Public=mPub,
+        RSA_Private=mPri,
+        company=mCompany)
+    return mSecretKey
+
+
 @login_required
 def keymaster_view(request):
     if request.method == 'GET':
@@ -70,14 +81,7 @@ def keymaster_view(request):
         mCompany = Company.objects.filter(admin__username=mUser)[0]
         mSecretKey = SecretKey.objects.filter(company=mCompany)
         if mCompany is not None and len(mSecretKey) is 0:
-            mAes = ''.join(random.sample(string.ascii_letters, 16))
-            print(mAes)
-            (mPub, mPri) = rsa.newkeys(128)
-            mSecretKey = SecretKey.objects.create(
-                AES=mAes,
-                RSA_Public=mPub,
-                RSA_Private=mPri,
-                company=mCompany)
+            mSecretKey = generator(mCompany)
             context = dict(
                 sk=mSecretKey
             )
@@ -86,6 +90,14 @@ def keymaster_view(request):
                 sk=mSecretKey[0]
             )
         return render(request, 'user/keymaster.html', context=context)
+    else:
+        mReset = request.POST.get('reset', False)
+        if mReset is not False:
+            mUser = request.user
+            mCompany = Company.objects.filter(admin__username=mUser)[0]
+            mSecretKey = SecretKey.objects.filter(company=mCompany).delete()
+            return JsonResponse(dict(ret='ok'))
+
 
 
 @login_required
