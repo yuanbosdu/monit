@@ -8,3 +8,4 @@ anyjson==0.3.3
 paho-mqtt==1.4.0
 simple-crypt==4.1.7
 rsa
+peewee

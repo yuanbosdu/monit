@@ -36,4 +36,5 @@ urlpatterns = [
     path('user/keymaster/', cviews.keymaster_view, name='keymaster'),
     path('user/device/list', cviews.device_list_view, name='device_list'),
     path('user/device/add', cviews.device_add_view, name='device_add'),
+    path('user/device/data', cviews.device_data_view, name='device_data'),
 ]

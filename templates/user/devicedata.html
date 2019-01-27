@@ -1,0 +1,102 @@
+{% extends 'user/base.html' %}
+{% block main %}
+<div class="ui equal width left aligned padded grid stackable">
+    <div class="ui row">
+        <div class="ui sixteen wide column">
+            <div class="ui segments">
+                <div class="ui segment" style="padding-bottom: 0px">
+                    <h5 class="ui left floated header">可视化状态信息</h5>
+                    <div class="clearfix"></div>
+                </div>
+                <div class="ui segment">
+                    <div class="ui grid">
+                        <div class="stretched row">
+                            <div class="sixteen wide tablet sixteen wide computer column">
+                                <div id="flot-profile" class="flotchart"
+                                     style="padding: 0px; position: relative;">
+
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <h5 class="ui header">
+                        设备数据
+                    </h5>
+                </div>
+                <div class="ui segment">
+                    <div class="ui segment left aligned">
+
+                        <table class="ui very basic center aligned  celled table">
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th>设备名称</th>
+                                <th>时间</th>
+                                <th>状态值</th>
+                                <th>Status</th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {% for s in State %}
+                            <tr>
+                                <td>{{ forloop.counter }}</td>
+                                <td>{{ Device.name }}</td>
+                                <td>{{ s.utime|date:'Y-m-d h:i:s' }}</td>
+                                <td>{{ s.state }}</td>
+                                <td><a class="ui blue mini basic label">Update</a></td>
+                            </tr>
+                            {% endfor %}
+                            </tbody>
+                        </table>
+                        <div class="ui inverted dimmer">
+                            <div class="ui text loader">Loading</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="ui confirm modal">
+        <div class="header">
+            Delete Your Account
+        </div>
+        <div class="content">
+            <p>Are you sure you want to delete your account</p>
+        </div>
+        <div class="actions">
+            <div class="ui negative button">
+                No
+            </div>
+            <div data-id="" class="ui positive right labeled icon button">
+                Yes
+                <i class="checkmark icon"></i>
+            </div>
+        </div>
+</div>
+<script type='text/javascript'>
+    $(function(){
+        $(".ui.basic.red.button").on('click', function() {
+            var id = $(this).attr('data-id');
+            console.log(id);
+            $('.ui.confirm.modal').modal('show');
+            $('.ui.positive.right.labeled.icon.button').attr('data-id', id);
+        })
+        $('.ui.positive.right.labeled.icon.button').on('click', function() {
+            var id = $(this).attr('data-id');
+            console.log(id);
+            $.post('/user/device/list',
+                {
+                "id": id,
+                },
+                function(data) {
+                    console.log(data);
+                    window.location.reload(true);
+                }
+            )
+        })
+    })
+</script>
+{% endblock %}

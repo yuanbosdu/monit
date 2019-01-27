@@ -32,7 +32,7 @@
                                 </div>
                                 <div class="extra content">
                                     <div class="ui two buttons">
-                                        <div class="ui basic green button">查看</div>
+                                        <div data-id='{{  i.id }}' id='dataview' class="ui basic green button">查看</div>
                                         <div data-id='{{ i.id }}' class="ui basic red button">删除</div>
                                     </div>
                                 </div>
@@ -76,13 +76,18 @@
             console.log(id);
             $.post('/user/device/list',
                 {
-                "id": id,
+                    "id": id,
                 },
                 function(data) {
                     console.log(data);
                     window.location.reload(true);
                 }
             )
+        })
+
+        $('.ui.basic.green.button').on('click', function () {
+            let deviceId = $(this).attr('data-id');
+            window.location.href = '/user/device/data?id=' + String(deviceId);
         })
     })
 </script>

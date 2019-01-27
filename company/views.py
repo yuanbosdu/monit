@@ -9,6 +9,7 @@ from zigbee.models import Zigbee
 import random
 import string
 import rsa
+from zigbee.models import Zigbee, ZigbeeState
 
 @login_required
 @csrf_exempt
@@ -98,6 +99,26 @@ def keymaster_view(request):
             mSecretKey = SecretKey.objects.filter(company=mCompany).delete()
             return JsonResponse(dict(ret='ok'))
 
+
+@login_required
+def device_data_view(request):
+
+    # check whether the user has the authority
+
+    deviceId = request.GET.get('id')
+    mDevice = Device.objects.get(id=deviceId)
+    print(mDevice.dtype_uuid, mDevice.dtype)
+
+    if mDevice.dprotocol == 'zigbee':
+        uuid = mDevice.dtype_uuid
+        mZigbeeState = ZigbeeState.objects.filter(zigbee__uuid=uuid).order_by('-utime')[0:50]
+    else:
+        mZigbeeState = None
+    context = dict(
+        Device=mDevice,
+        State=mZigbeeState
+    )
+    return render(request, 'user/devicedata.html', context=context)
 
 
 @login_required

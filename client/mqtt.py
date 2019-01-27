@@ -1,13 +1,65 @@
 # -*- encoding:utf-8 -*-
 import paho.mqtt.client as mqtt
 import time
+import datetime
+import pytz
+from peewee import *
+from playhouse.shortcuts import model_to_dict, dict_to_model
+
 
 HOST = '127.0.0.1'
 PORT = 61613
 USER = 'temp'
 PASSWORD = 'temp'
+DATABASE = '/opt/monit/monit/db.sqlite3'
 
 show_promt = 0
+
+# connect to the databasse
+db = SqliteDatabase(database=DATABASE)
+db.connect()
+
+class BaseModel(Model):
+
+    class Meta:
+        database = db
+
+
+class Device(BaseModel):
+    name = CharField(max_length=50)
+    desc = TextField()
+    address = CharField(max_length=50)
+    ctime = DateTimeField()
+    mtime = DateTimeField()
+    ename = CharField(max_length=50)
+    uuid = UUIDField()
+
+    class Meta:
+        table_name='zigbee_zigbee'
+
+
+class DeviceState(BaseModel):
+    utime = DateTimeField()
+    state = CharField(max_length=50)
+    zigbee_id = IntegerField()
+    state_type = CharField(max_length=50)
+
+    class Meta:
+        table_name = 'zigbee_zigbeestate'
+
+
+test1 = Device.filter(uuid='79243678-21e3-11e9-94bc-40a5ef06d51d')[0]
+deviceId = test1.id
+print(deviceId)
+
+newState = DeviceState.create(
+    utime=datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai')),
+    zigbee_id=deviceId,
+    state='122',
+    state_type='string',
+)
+
+exit()
 
 
 def on_connect(client, userdata, flags, rc):
