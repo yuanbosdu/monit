@@ -7,6 +7,8 @@ from django.http.response import JsonResponse
 from .models import Company, Device, SecretKey
 from zigbee.models import Zigbee
 import random
+import datetime
+import json
 import string
 import rsa
 from zigbee.models import Zigbee, ZigbeeState
@@ -111,12 +113,28 @@ def device_data_view(request):
 
     if mDevice.dprotocol == 'zigbee':
         uuid = mDevice.dtype_uuid
-        mZigbeeState = ZigbeeState.objects.filter(zigbee__uuid=uuid).order_by('-utime')[0:50]
+        mZigbeeState = ZigbeeState.objects.filter(zigbee__uuid=uuid).order_by('-utime')[0:10]
     else:
         mZigbeeState = None
+    if mZigbeeState is not None:
+        statelist = []
+        stateticks = []
+        i = 1
+        for mZS in mZigbeeState:
+            statelist.append([i, int(mZS.state)])
+            stateticks.append([i, datetime.datetime.strftime(mZS.utime, "%H:%M:%S")])
+            i = i + 1
+    else:
+        statelist = []
+        stateticks = []
+    # convert statelist to json
+    statelist = json.dumps(statelist)
+    stateticks = json.dumps(stateticks)
     context = dict(
         Device=mDevice,
-        State=mZigbeeState
+        State=mZigbeeState,
+        statelist=statelist,
+        stateticks=stateticks
     )
     return render(request, 'user/devicedata.html', context=context)
 

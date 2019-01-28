@@ -12,8 +12,8 @@
                     <div class="ui grid">
                         <div class="stretched row">
                             <div class="sixteen wide tablet sixteen wide computer column">
-                                <div id="flot-profile" class="flotchart"
-                                     style="padding: 0px; position: relative;">
+                                <div id="flot-profile" data-state="{{ statelist }}" data-ticks="{{ stateticks }}" class="flotchart"
+                                     style="padding: 0px; position: relative; height: 200px;">
 
                                 </div>
                             </div>
@@ -97,6 +97,18 @@
                 }
             )
         })
+
+        let d1 = JSON.parse($("#flot-profile").attr('data-state'));
+        let d2 = JSON.parse($("#flot-profile").attr('data-ticks'));
+
+        $.plot($("#flot-profile"), [{
+            label: '{{ Device.name }}',
+            data: d1
+        }], {
+            series: { lines: { show: true }, points: { show: true }},
+            xaxis: { ticks: d2 },
+            yaxis: { ticks: 10, min: 0},
+        });
     })
 </script>
 {% endblock %}
