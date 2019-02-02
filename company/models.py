@@ -30,6 +30,8 @@ class Device(models.Model):
     dtype_uuid = models.CharField(max_length=50)  # this is uuid of dtype
     ctime = models.DateTimeField(models.DateTimeField, auto_now=True)
 
+    company = models.ForeignKey(Company, on_delete=models.SET_NULL, default=None, null=True)
+
     def __str__(self):
         return "%s" % self.name
 

@@ -4,6 +4,7 @@ import time
 import datetime
 import pytz
 from peewee import *
+import random
 from playhouse.shortcuts import model_to_dict, dict_to_model
 
 
@@ -48,16 +49,17 @@ class DeviceState(BaseModel):
         table_name = 'zigbee_zigbeestate'
 
 
-test1 = Device.filter(uuid='79243678-21e3-11e9-94bc-40a5ef06d51d')[0]
+test1 = Device.filter(uuid='b3826b7c-26a3-11e9-8bc0-40a5ef06d51d')[0]
 deviceId = test1.id
 print(deviceId)
 
-newState = DeviceState.create(
-    utime=datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai')),
-    zigbee_id=deviceId,
-    state='122',
-    state_type='string',
-)
+for i in range(10):
+    newState = DeviceState.create(
+        utime=datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai')),
+        zigbee_id=deviceId,
+        state=random.randint(1, 10),
+        state_type='string',
+    )
 
 exit()
 

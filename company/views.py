@@ -12,6 +12,8 @@ import json
 import string
 import rsa
 from zigbee.models import Zigbee, ZigbeeState
+from monit.utils import check_owner, add_company
+
 
 @login_required
 @csrf_exempt
@@ -40,7 +42,8 @@ def device_list_view(request):
 
 @login_required
 @csrf_exempt
-def device_add_view(request):
+@add_company
+def device_add_view(request, company=None):
     if request.method == 'POST':
 
         name = request.POST.get('name', None)
@@ -54,7 +57,7 @@ def device_add_view(request):
             return JsonResponse(dict(err='input the data'))
 
         # print(name, description, dtype, dprotocol)
-        mdevice = Device.objects.create(name=name, description=description, dtype=dtype, dprotocol=dprotocol)
+        mdevice = Device.objects.create(name=name, description=description, dtype=dtype, dprotocol=dprotocol, company=company)
 
         if dprotocol == 'zigbee':
             mZigbee = Zigbee.objects.create(name=name, ename=dtype)
@@ -103,6 +106,7 @@ def keymaster_view(request):
 
 
 @login_required
+@check_owner('device')
 def device_data_view(request):
 
     # check whether the user has the authority
