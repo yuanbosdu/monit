@@ -36,6 +36,21 @@ class Device(models.Model):
         return "%s" % self.name
 
 
+# model device ruler
+class DeviceRuler(models.Model):
+    name = models.CharField(max_length=50, unique=True)
+    description = models.CharField(max_length=200, null=True, blank=True)
+    ruler = models.CharField(max_length=100)
+    ctime = models.DateTimeField(auto_now_add=True)
+    company = models.ForeignKey(Company, on_delete=models.CASCADE, related_name='rulers')
+
+    def __str__(self):
+        return "DeviceRuler Class: %s:%s" % (
+            self.name,
+            self.ruler,
+        )
+
+
 # model user property
 class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)

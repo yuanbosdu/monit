@@ -3,8 +3,10 @@ from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from django.http import request, response
 # Create your views here.
+from django.http import HttpResponseRedirect
+from django.shortcuts import reverse
 from django.http.response import JsonResponse
-from .models import Company, Device, SecretKey
+from .models import Company, Device, DeviceRuler, SecretKey
 from zigbee.models import Zigbee
 import random
 import datetime
@@ -66,6 +68,22 @@ def device_add_view(request, company=None):
             return JsonResponse(dict(err='None'))
 
     return render(request, 'user/deviceadd.html')
+
+
+@login_required
+@add_company
+def device_ruler_view(request, company=None):
+    # print(company)
+    if request.method == 'POST':
+        pass
+        return JsonResponse(dict(
+            err='None'
+        ))
+    else:
+        rulers = DeviceRuler.objects.filter(company=company)
+        context = dict()
+        context.update(rulers=rulers)
+        return render(request, 'user/deviceruler.html', context=context)
 
 
 def generator(mCompany):

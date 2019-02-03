@@ -1,0 +1,75 @@
+{% extends 'user/base.html' %}
+{% block main %}
+    <div class="ui equal width left aligned padded grid stackable">
+        <div class="ui row">
+            <div class="ui sixteen wide column">
+                <div class="ui segments">
+                    <div class="ui segment">
+                        <h5 class="ui left floated header">设备规则</h5>
+                        <button class="ui right floated basic primary button" id="add_ruler">增加</button>
+                        <div class="clearfix"></div>
+                    </div>
+                    <div class="ui segment">
+                        <div class="ui four stackable cards">
+                            {% for ruler in rulers %}
+                            <div class="ui card">
+                                <div class="content">
+                                    <a class="header">{{ ruler.name }}</a>
+                                    <div class="meta">
+                                        <span class="date">Joined in {{ ruler.ctime|date:'Y/m/d H:i:s' }}</span>
+                                    </div>
+                                    <div class="description">
+                                        {{ ruler.description }}
+                                    </div>
+                                    <div class="meta">
+                                        {{ ruler.ruler }}
+                                    </div>
+                                </div>
+                            </div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="ui confirm modal">
+        <div class="header">
+            增加规则
+        </div>
+        <div class="content">
+            <div class="ui form">
+                <div class="field">
+                    <label>规则名称</label>
+                    <div class="ui left icon input">
+                        <input name="ruler_name" type="text" placeholder="ruler name">
+                        <i class="user icon"></i>
+                    </div>
+                </div>
+                <div class="field">
+                    <label>规则描述</label>
+                    <div class="ui left icon input">
+                        <input name="ruler_description" type="text" placeholder="ruler description">
+                    </div>
+                </div>
+                <div class="field">
+                    <label>规则</label>
+                    <div class="ui left icon input">
+                        <input name="ruler_ruler" type="text" placeholder="ruler">
+                    </div>
+                </div>
+                <div class="field">
+                    <div id="btn_submit" class="ui right floated blue submit button">增加</div>
+                    <div class="clearfix"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <script type="text/javascript">
+        $(function () {
+            $("#add_ruler").on('click', function () {
+                $(".ui.confirm.modal").modal('show');
+            })
+        })
+    </script>
+{% endblock %}
