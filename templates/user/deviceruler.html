@@ -25,6 +25,9 @@
                                         {{ ruler.ruler }}
                                     </div>
                                 </div>
+                                <div class="extra content">
+                                    <div data-id="{{ ruler.id }}" class="fluid ui inverted red button">删除</div>
+                                </div>
                             </div>
                             {% endfor %}
                         </div>
@@ -39,6 +42,7 @@
         </div>
         <div class="content">
             <div class="ui form">
+                <div class="ui hidden">{% csrf_token %}</div>
                 <div class="field">
                     <label>规则名称</label>
                     <div class="ui left icon input">
@@ -67,8 +71,54 @@
     </div>
     <script type="text/javascript">
         $(function () {
+            $.ajaxSetup({
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    }
+                })
             $("#add_ruler").on('click', function () {
                 $(".ui.confirm.modal").modal('show');
+            })
+            $("#btn_submit").on('click', function () {
+                let ruler_name = $("input[name='ruler_name']").val();
+                let ruler_description = $("input[name='ruler_description']").val();
+                let ruler_ruler = $("input[name='ruler_ruler']").val();
+                console.log(ruler_name+ruler_description+ruler_ruler);
+                $.ajaxSetup({
+                    data: {
+                        csrfmiddlewaretoken: '{{ csrf_token }}'
+                    }
+                })
+                $.post('/user/device/ruler',
+                    {
+                        act: 'add',
+                        name: ruler_name,
+                        description: ruler_description,
+                        ruler: ruler_ruler,
+                    },
+                    function (data) {
+                        console.log(data);
+                        if (data.err == 'None') {
+                            window.location.reload(true);
+                        }
+                    }
+                )
+            })
+            $(".fluid.ui.inverted.red.button").on('click', function () {
+                let id = $(this).attr('data-id');
+                console.log(id);
+                $.post('/user/device/ruler',
+                    {
+                        id: id,
+                        act: 'delete',
+                    },
+                    function (data) {
+                        console.log(data);
+                        if (data.err == 'None') {
+                            window.location.reload(true);
+                        }
+                    }
+                )
             })
         })
     </script>

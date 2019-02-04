@@ -31,6 +31,7 @@ class Device(models.Model):
     ctime = models.DateTimeField(models.DateTimeField, auto_now=True)
 
     company = models.ForeignKey(Company, on_delete=models.SET_NULL, default=None, null=True)
+    rulers = models.ManyToManyField('DeviceRuler', related_name='devices', default=None, null=True, blank=True)
 
     def __str__(self):
         return "%s" % self.name

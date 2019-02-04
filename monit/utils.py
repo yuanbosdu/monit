@@ -17,7 +17,10 @@ def check_owner(obj):
             if len(mCompany) == 0:
                 return HttpResponseRedirect(reverse('user_index'))
             mCompany = mCompany[0]
-            id = request.GET.get('id', None)
+            if request.method == 'GET':
+                id = request.GET.get('id', None)
+            else:
+                id = request.POST.get('id', None)
             if id is None:
                 return HttpResponseRedirect(reverse('user_index'))
             if obj == 'device':

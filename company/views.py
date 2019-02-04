@@ -75,7 +75,39 @@ def device_add_view(request, company=None):
 def device_ruler_view(request, company=None):
     # print(company)
     if request.method == 'POST':
-        pass
+        act = request.POST.get('act', None)
+        if act is None:
+            return JsonResponse(dict(
+                err='chose act'
+            ))
+        if act == 'add':
+            name = request.POST.get('name', None)
+            description = request.POST.get('description', None)
+            ruler = request.POST.get('ruler', None)
+            if name is None or description is None or ruler is None:
+                return JsonResponse(dict(
+                    err='input values'
+                ))
+            mRuler = DeviceRuler.objects.filter(name=name)
+            if len(mRuler) != 0:
+                return JsonResponse(dict(
+                    err='change the name'
+                ))
+            else:
+                mRuler = DeviceRuler.objects.create(name=name, description=description, ruler=ruler, company=company)
+                return JsonResponse(dict(
+                    err='None'
+                ))
+        elif act == 'delete':
+            id = request.POST.get('id', None)
+            if id is None:
+                return JsonResponse(dict(
+                    err='None'
+                ))
+            ret = DeviceRuler.objects.filter(id=id).delete()
+            return JsonResponse(dict(
+                err='None'
+            ))
         return JsonResponse(dict(
             err='None'
         ))
@@ -125,12 +157,37 @@ def keymaster_view(request):
 
 @login_required
 @check_owner('device')
-def device_data_view(request):
-
+@add_company
+def device_data_view(request, company=None):
+    # print(company)
+    if request.method == 'POST':
+        id = request.POST.get('id', None)
+        ruler = request.POST.get('ruler', None)
+        print(id, ruler)
+        if id is None or ruler is None:
+            return JsonResponse(dict(
+                err='chose the ruler'
+            ))
+        tempDevice = Device.objects.filter(id=id)
+        if len(tempDevice) == 0:
+            return JsonResponse(dict(err='No Device'))
+        tempDevice = tempDevice[0]
+        if ruler == '-':
+            tempDevice.rulers.delete()
+            tempDevice.save()
+        else:
+            tempDeviceRuler = DeviceRuler.objects.get(name=ruler)
+            tempDevice.rulers.add(tempDeviceRuler)
+            tempDevice.save()
+        return JsonResponse(dict(
+            err='None'
+        ))
     # check whether the user has the authority
 
     deviceId = request.GET.get('id')
     mDevice = Device.objects.get(id=deviceId)
+    print(mDevice.rulers)
+    mRulers = DeviceRuler.objects.filter(company=company)
     print(mDevice.dtype_uuid, mDevice.dtype)
 
     if mDevice.dprotocol == 'zigbee':
@@ -155,6 +212,7 @@ def device_data_view(request):
     context = dict(
         Device=mDevice,
         State=mZigbeeState,
+        Rulers=mRulers,
         statelist=statelist,
         stateticks=stateticks
     )

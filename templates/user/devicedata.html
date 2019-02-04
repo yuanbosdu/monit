@@ -12,7 +12,7 @@
                     <div class="ui grid">
                         <div class="stretched row">
                             <div class="sixteen wide tablet sixteen wide computer column">
-                                <div id="flot-profile" data-state="{{ statelist }}" data-ticks="{{ stateticks }}" class="flotchart"
+                                <div id="flot-profile" data-id="{{ Device.id }}" data-state="{{ statelist }}" data-ticks="{{ stateticks }}" class="flotchart"
                                      style="padding: 0px; position: relative; height: 200px;">
 
                                 </div>
@@ -26,6 +26,15 @@
                     </h5>
                 </div>
                 <div class="ui segment">
+                    <div class="ui right floated">
+                        <label>设备规则</label>
+                        <select name="chose_ruler" class="ui dropdown">
+                            <option value="-">-</option>
+                            {% for r in Rulers %}
+                            <option value="{{ r.name }}">{{ r.name }}:{{ r.ruler }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
                     <div class="ui segment left aligned">
 
                         <table class="ui very basic center aligned  celled table">
@@ -45,7 +54,7 @@
                                 <td>{{ Device.name }}</td>
                                 <td>{{ s.utime|date:'Y-m-d h:i:s' }}</td>
                                 <td>{{ s.state }}</td>
-                                <td><a class="ui blue mini basic label">Update</a></td>
+                                <td><a class="ui green mini basic label">Normal</a></td>
                             </tr>
                             {% endfor %}
                             </tbody>
@@ -78,6 +87,11 @@
 </div>
 <script type='text/javascript'>
     $(function(){
+        $.ajaxSetup({
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            }
+        })
         $(".ui.basic.red.button").on('click', function() {
             var id = $(this).attr('data-id');
             console.log(id);
@@ -108,7 +122,24 @@
             series: { lines: { show: true }, points: { show: true }},
             xaxis: { ticks: d2 },
             yaxis: { ticks: 10, min: 0},
-        });
+        })
+        $(".ui.dropdown").on('change', function () {
+            let device_id = $("#flot-profile").attr('data-id');
+            let ruler = $("select[name='chose_ruler']").dropdown('get value');
+            console.log(ruler);
+            $.post('/user/device/data?id=' + device_id,
+                {
+                    id: device_id,
+                    ruler: ruler,
+                },
+                function (data) {
+                    console.log(data);
+                    if (data.err == 'None') {
+                        window.location.reload(true);
+                    }
+                }
+            )
+        })
     })
 </script>
 {% endblock %}
