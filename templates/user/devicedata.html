@@ -54,7 +54,13 @@
                                 <td>{{ Device.name }}</td>
                                 <td>{{ s.utime|date:'Y-m-d h:i:s' }}</td>
                                 <td>{{ s.state }}</td>
-                                <td><a class="ui green mini basic label">Normal</a></td>
+                                <td>
+                                    {% if s.alert %}
+                                    <a class="ui red mini basic label">Alert</a>
+                                    {% else %}
+                                    <a class="ui green mini basic label">Normal</a>
+                                    {% endif %}
+                                </td>
                             </tr>
                             {% endfor %}
                             </tbody>
@@ -123,6 +129,7 @@
             xaxis: { ticks: d2 },
             yaxis: { ticks: 10, min: 0},
         })
+        $(".ui.dropdown").dropdown('set selected', '{{ CurrentRuler.name }}');
         $(".ui.dropdown").on('change', function () {
             let device_id = $("#flot-profile").attr('data-id');
             let ruler = $("select[name='chose_ruler']").dropdown('get value');

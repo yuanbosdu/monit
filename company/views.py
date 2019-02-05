@@ -163,19 +163,20 @@ def device_data_view(request, company=None):
     if request.method == 'POST':
         id = request.POST.get('id', None)
         ruler = request.POST.get('ruler', None)
-        print(id, ruler)
+        # print(id, ruler)
         if id is None or ruler is None:
             return JsonResponse(dict(
                 err='chose the ruler'
             ))
         tempDevice = Device.objects.filter(id=id)
-        if len(tempDevice) == 0:
+        if tempDevice.count() == 0:
             return JsonResponse(dict(err='No Device'))
         tempDevice = tempDevice[0]
         if ruler == '-':
-            tempDevice.rulers.delete()
+            tempDevice.rulers.set([])
             tempDevice.save()
         else:
+            tempDevice.rulers.set([])
             tempDeviceRuler = DeviceRuler.objects.get(name=ruler)
             tempDevice.rulers.add(tempDeviceRuler)
             tempDevice.save()
@@ -186,6 +187,14 @@ def device_data_view(request, company=None):
 
     deviceId = request.GET.get('id')
     mDevice = Device.objects.get(id=deviceId)
+    mDeviceRuler = mDevice.rulers.all()
+    if mDeviceRuler.count() != 0:
+        mDeviceRuler = mDeviceRuler[mDeviceRuler.count()-1]
+    else:
+        mDeviceRuler = None
+    print("*" * 10)
+    print(mDeviceRuler)
+    print("*" * 10)
     print(mDevice.rulers)
     mRulers = DeviceRuler.objects.filter(company=company)
     print(mDevice.dtype_uuid, mDevice.dtype)
@@ -209,10 +218,26 @@ def device_data_view(request, company=None):
     # convert statelist to json
     statelist = json.dumps(statelist)
     stateticks = json.dumps(stateticks)
+
+    tempState = []
+    if mDeviceRuler is not None and mZigbeeState.count() != 0:
+        ruler_str = "%s%s"
+        for stat in mZigbeeState:
+            temp_ruler_str = ruler_str % (stat.state, mDeviceRuler.ruler)
+            ret = eval(temp_ruler_str)
+            tempState.insert(-1, dict(
+                utime=stat.utime,
+                state=stat.state,
+                alert=ret
+            ))
+
+    if len(tempState) == 0:
+        tempState = mZigbeeState
     context = dict(
         Device=mDevice,
-        State=mZigbeeState,
+        State=tempState,
         Rulers=mRulers,
+        CurrentRuler=mDeviceRuler,
         statelist=statelist,
         stateticks=stateticks
     )
