@@ -7,6 +7,7 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import reverse
 from django.http.response import JsonResponse
 from .models import Company, Device, DeviceRuler, SecretKey
+from .models import *
 from zigbee.models import Zigbee
 import random
 import datetime
@@ -269,5 +270,23 @@ def user_resetpwd_view(request):
 
 @login_required
 def user_permission_view(request):
+    user = request.user
+    user_permission = UserInfo.objects.filter(user=user)[0].permission.all()
+    if user_permission.filter(permission='master').count() > 0:
+        #get the all employee
+        company = Company.objects.filter(admin=user)
+        if company.count() > 0:
+            company = company[0]
+        else:
+            company = UserInfo.objects.filter(user=user).first().company
+            print(company)
+        employee = UserInfo.objects.filter(company=company).values('user__username').all()
+        print(employee)
 
-    return render(request, 'user/permission.html')
+        # get permission
+        perms = UserPerm.objects.all()
+        context = dict()
+        context.update(employee=employee, permission=perms)
+        return render(request, 'user/permission.html', context=context)
+    else:
+        return HttpResponseRedirect(reverse('user_index'))

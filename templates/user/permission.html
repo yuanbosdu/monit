@@ -1,6 +1,6 @@
 {% extends 'user/base.html' %}
 {% block main %}
-<div class="ui equal width left aligned padded grid stackable">
+<div class="ui equal width left aligned padded grid stackable fullheight">
     <div class="ui row">
         <div class="ui fourteen wide column">
             <div class="ui segments">
@@ -14,18 +14,20 @@
                         <div class="field">
                             <label>用户名</label>
                             <div class="ui input">
-                                <select class="ui compact selection dropdown">
-                                    <option value="one">yuanbo</option>
-                                    <option value="two">two</option>
+                                <select class="ui dropdown">
+                                    {% for e in employee %}
+                                    <option value="{{ e.user__username }}">{{ e.user__username }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>
                         <div class="field">
                             <label>权限组</label>
                             <div class="ui input">
-                                <select class="ui compact selection dropdown">
-                                    <option value="one">one</option>
-                                    <option value="two">two</option>
+                                <select class="ui dropdown" multiple="multiple">
+                                    {% for p in permission %}
+                                    <option value="{{ p.id }}">{{ p.name }}:{{ p.permission }}</option>
+                                    {% endfor %}
                                 </select>
                             </div>
                         </div>

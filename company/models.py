@@ -52,12 +52,21 @@ class DeviceRuler(models.Model):
         )
 
 
+# model user permission
+class UserPerm(models.Model):
+    name = models.CharField(max_length=50)
+    permission = models.CharField(max_length=200, default=None)
+
+    def __str__(self):
+        return "UserPerm: %s-%s" % (self.name, self.permission)
+
+
 # model user property
 class UserInfo(models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     company = models.ForeignKey(Company, on_delete=models.CASCADE, null=True, blank=True)
-    phone = models.CharField(max_length=50)
-    permission = models.CharField(max_length=200)   # simple permission management
+    phone = models.CharField(max_length=50, blank=True, null=True)
+    permission = models.ManyToManyField(UserPerm, related_name='userinfo', default=None)   # simple permission management
 
     def __str__(self):
         return "%s" % self.permission
