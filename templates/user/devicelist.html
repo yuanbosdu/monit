@@ -4,10 +4,12 @@
     <div class="ui row">
         <div class="ui sixteen wide column">
             <div class="ui segments">
-                <div class="ui segment">
-                    <h5 class="ui header">
+                <div class="ui segment" style="padding-bottom: 0px;">
+                    <h5 class="ui left floated header">
                         设备列表
                     </h5>
+                    <a href="/user/device/add" class="ui right floated basic green button">增加设备</a>
+                    <div class="clearfix"></div>
                 </div>
                 <div class="ui segment">
                     <div class="ui four stackable cards">
@@ -30,7 +32,7 @@
                                         {{ i.dtype_uuid }}
                                     </div>
                                 </div>
-                                <div class="extra content">
+                                <div class="extra content" style="padding: 1px 5px;">
                                     <div class="ui two buttons">
                                         <div data-id='{{  i.id }}' id='dataview' class="ui basic green button">查看</div>
                                         <div data-id='{{ i.id }}' class="ui basic red button">删除</div>

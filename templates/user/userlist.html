@@ -6,6 +6,18 @@
             <div class="ui segments">
                 <div class="ui segment">
                     <h5 class="ui header">
+                        企业信息
+                    </h5>
+                </div>
+                <div class="ui segment">
+                    <div class="ui content">
+                        {% if company is not None %}
+                        {{ company.name }}
+                        {% endif %}
+                    </div>
+                </div>
+                <div class="ui segment">
+                    <h5 class="ui header">
                         用户列表
                     </h5>
                 </div>

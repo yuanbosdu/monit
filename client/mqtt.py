@@ -49,15 +49,15 @@ class DeviceState(BaseModel):
         table_name = 'zigbee_zigbeestate'
 
 
-test1 = Device.filter(uuid='b3826b7c-26a3-11e9-8bc0-40a5ef06d51d')[0]
+test1 = Device.filter(uuid='bac36246-2852-11e9-b686-40a5ef06d51d')[0]
 deviceId = test1.id
 print(deviceId)
 
-for i in range(10):
+for i in range(20):
     newState = DeviceState.create(
         utime=datetime.datetime.now(tz=pytz.timezone('Asia/Shanghai')),
         zigbee_id=deviceId,
-        state=random.randint(1, 10),
+        state=random.randint(1, 99),
         state_type='string',
     )
 

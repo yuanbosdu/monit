@@ -201,7 +201,7 @@ def device_data_view(request, company=None):
 
     if mDevice.dprotocol == 'zigbee':
         uuid = mDevice.dtype_uuid
-        mZigbeeState = ZigbeeState.objects.filter(zigbee__uuid=uuid).order_by('-utime')[0:10]
+        mZigbeeState = ZigbeeState.objects.filter(zigbee__uuid=uuid).order_by('-utime')[:20]
     else:
         mZigbeeState = None
     if mZigbeeState is not None:
@@ -245,9 +245,14 @@ def device_data_view(request, company=None):
 
 
 @login_required
-def userlist_view(request):
-
-    return render(request, 'user/userlist.html')
+@add_company
+def userlist_view(request, company=None):
+    context = dict()
+    if company is not None:
+        context.update(company=company)
+    else:
+        context.update(company=None)
+    return render(request, 'user/userlist.html', context=context)
 
 
 @login_required
