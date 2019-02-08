@@ -980,6 +980,8 @@
                         <div class="ui dropdown item">
                             <img class="ui mini circular image" src="{% static 'dist/user/img/avatar/people/enid.png' %}" alt="label-image" />
                             <div class="menu">
+                                <div class="item">welcome <em>{{ request.user.username }}</em></div>
+                                <div class="ui divider"></div>
                                 <a class="item" href="/">首页</a>
                                 <a class="item" href="profile.html">Profile</a>
                                 <a class="item" href="settings.html">设置</a>

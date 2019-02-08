@@ -290,3 +290,19 @@ def user_permission_view(request):
         return render(request, 'user/permission.html', context=context)
     else:
         return HttpResponseRedirect(reverse('user_index'))
+
+
+@login_required
+def user_permission_api(request):
+    if request.method == 'GET':
+        username = request.GET.get('username', None)
+        if username is not None:
+            perms = UserInfo.objects.filter(user__username=username).values('permission__name').all()
+            return JsonResponse(dict(
+                err='None',
+                perms=perms))
+        else:
+            return JsonResponse(dict(
+                err='input username'
+            ))
+
