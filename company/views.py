@@ -300,9 +300,20 @@ def user_permission_api(request):
             perms = UserInfo.objects.filter(user__username=username).values('permission__name').all()
             return JsonResponse(dict(
                 err='None',
-                perms=perms))
+                perms=list(perms)))
         else:
             return JsonResponse(dict(
                 err='input username'
             ))
-
+    else:
+        username = request.POST.get('username')
+        perms = request.POST.get('perms')
+        perms = json.loads(perms)
+        mUserInfo = UserInfo.objects.filter(user__username=username).first()
+        mUserInfo.permission.set([])
+        for p in perms:
+            mUserPerm = UserPerm.objects.get(id=int(p))
+            mUserInfo.permission.add(mUserPerm)
+        return JsonResponse(dict(
+            err='None',
+        ))

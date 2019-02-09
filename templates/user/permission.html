@@ -21,7 +21,7 @@
                                 </select>
                             </div>
                         </div>
-                        <div id="current_perm" class="ui hidden field">
+                        <div id="current_perm" class="ui field">
 
                         </div>
                         <div class="field">
@@ -35,7 +35,7 @@
                             </div>
                         </div>
                         <div class="field">
-                            <button class="ui primary red button">更改权限</button>
+                            <button id="change_perm" class="ui primary button">更改权限</button>
                         </div>
                     </div>
                 </div>
@@ -48,7 +48,42 @@ $(function () {
     $(".ui.dropdown.user").on('change', function () {
         let cur = $(this).dropdown('get value');
         console.log(cur);
-        $.get('/api/')
+        $.get('/api/user/permission', {
+                username: cur,
+            },
+            function (data) {
+                console.log(data);
+                if (data.err != 'None')
+                    return;
+                $("#current_perm").empty().append('<label>当前权限</label>');
+                for (let v in data.perms) {
+                    $("#current_perm").append(data.perms[v].permission__name+';');
+                }
+            })
+    })
+
+    $("#change_perm").on('click', function () {
+        let cur = $(".ui.dropdown.user").dropdown('get value');
+        console.log(cur);
+        let perms = $(".ui.dropdown.perm").dropdown('get value');
+        let tmp = '';
+        for (let p in perms) {
+            tmp = tmp.concat(perms[p] + ';');
+        }
+        console.log(perms);
+        $.ajaxSetup({
+            data: {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            }
+        })
+        $.post('/api/user/permission', {
+            username: cur,
+            perms: JSON.stringify(perms),
+        }, function (data) {
+            if (data.err == 'None') {
+                window.location.reload(true);
+            }
+        })
     })
 })
 </script>

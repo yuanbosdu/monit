@@ -23,6 +23,7 @@ urlpatterns = [
     path('index/', include('homepage.urls'), name='index'),
     path('serial/', include('monitserial.urls')),
     path('rabbitmq/', include('rabbitmq.urls')),
+    path('api/user/', include('company.urls')),
     path('admin/', admin.site.urls),
 
     path('user/index/', views.user_index, name='user_index'),
