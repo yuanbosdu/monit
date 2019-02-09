@@ -8,6 +8,7 @@ from django.shortcuts import reverse
 from django.http.response import JsonResponse
 from .models import Company, Device, DeviceRuler, SecretKey
 from .models import *
+from django.contrib.auth.password_validation import password_changed
 from zigbee.models import Zigbee
 import random
 import datetime
@@ -251,15 +252,35 @@ def userlist_view(request, company=None):
     context = dict()
     if company is not None:
         context.update(company=company)
+        employee = User.objects.filter(userinfo__company=company).values('username', 'email').all()
+        context.update(employee=employee)
     else:
-        context.update(company=None)
+        context.update(company=None, employee=None)
     return render(request, 'user/userlist.html', context=context)
 
 
 @login_required
-def useradd_view(request):
-
-    return render(request, 'user/useradd.html')
+@add_company
+def useradd_view(request, company=None):
+    user = request.user
+    user_permission = UserInfo.objects.filter(user=user)[0].permission.all()
+    if user_permission.filter(permission='master').count() > 0:
+        if request.method == 'POST':
+            name = request.POST.get('name', None)
+            email = request.POST.get('email', None)
+            passwd = request.POST.get('passwd', None)
+            if name is None or email is None or passwd is None:
+                return JsonResponse(dict(
+                    err='input all',
+                ))
+            newUser = User.objects.create(username=name, email=email, password=passwd)
+            newUserInfo = UserInfo.objects.create(user=newUser, company=company)
+            return HttpResponseRedirect(dict(
+                err='None'
+            ))
+        return render(request, 'user/useradd.html')
+    else:
+        return HttpResponseRedirect(reverse('user_index'))
 
 
 @login_required

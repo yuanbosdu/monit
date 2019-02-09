@@ -31,11 +31,19 @@
                         </tr>
                         </thead>
                         <tbody>
+                        {% for e in employee %}
                         <tr>
-                            <td>yuanbo</td>
-                            <td>yuanbosdu@163.com</td>
-                            <td><button class="ui basic primary button">重置密码</button> </td>
+                            <td>{{ e.username }}</td>
+                            <td>{{ e.email }}</td>
+                            <td>
+                                {% if e.username == request.user.username %}
+                                <button class="ui basic primary button">重置密码</button>
+                                {% else %}
+                                <button class="ui basic primary button" disabled>重置密码</button>
+                                {% endif %}
+                            </td>
                         </tr>
+                        {% endfor %}
                         </tbody>
                     </table>
                 </div>
