@@ -8,7 +8,7 @@ from django.shortcuts import reverse
 from django.http.response import JsonResponse
 from .models import Company, Device, DeviceRuler, SecretKey
 from .models import *
-from django.contrib.auth.password_validation import password_changed
+from django.contrib.auth.hashers import make_password
 from zigbee.models import Zigbee
 import random
 import datetime
@@ -266,16 +266,16 @@ def useradd_view(request, company=None):
     user_permission = UserInfo.objects.filter(user=user)[0].permission.all()
     if user_permission.filter(permission='master').count() > 0:
         if request.method == 'POST':
-            name = request.POST.get('name', None)
+            name = request.POST.get('username', None)
             email = request.POST.get('email', None)
             passwd = request.POST.get('passwd', None)
             if name is None or email is None or passwd is None:
                 return JsonResponse(dict(
                     err='input all',
                 ))
-            newUser = User.objects.create(username=name, email=email, password=passwd)
+            newUser = User.objects.create(username=name, email=email, password=make_password(passwd))
             newUserInfo = UserInfo.objects.create(user=newUser, company=company)
-            return HttpResponseRedirect(dict(
+            return JsonResponse(dict(
                 err='None'
             ))
         return render(request, 'user/useradd.html')

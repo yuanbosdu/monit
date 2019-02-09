@@ -14,21 +14,21 @@
                         <div class="field">
                             <label>用户名</label>
                             <div class="ui left icon input">
-                                <input name="user_name" type="text" placeholder="user name">
+                                <input name="username" type="text" placeholder="user name">
                                 <i class="user icon"></i>
                             </div>
                         </div>
                         <div class="field">
                             <label>邮箱</label>
                             <div class="ui left icon input">
-                                <input name="user_email" type="text" placeholder="email">
+                                <input name="email" type="text" placeholder="email">
                                 <i class="mail icon"></i>
                             </div>
                         </div>
                         <div class="field">
                             <label>初始密码</label>
                             <div class="ui left icon input">
-                                <input name="user_password" type="text" placeholder="password">
+                                <input name="passwd" type="text" placeholder="password">
                                 <i class="hide icon"></i>
                             </div>
                         </div>
@@ -44,12 +44,26 @@
 <script>
     $(function(){
         $("#btn_add_user").on('click', function() {
-            let user_name = $("input[name='user_name']").val();
-            let user_email = $("input[name='user_email']").val();
-            let user_password = $("input[name='user_password']").val();
+            let user_name = $("input[name='username']").val();
+            let user_email = $("input[name='email']").val();
+            let user_password = $("input[name='passwd']").val();
             console.log(user_name);
             console.log(user_email);
             console.log(user_password);
+            $.ajaxSetup({
+                data: {
+                    csrfmiddlewaretoken: '{{ csrf_token }}'
+                }
+            })
+            $.post('/user/useradd/', {
+                username: user_name,
+                email: user_email,
+                passwd: user_password,
+            }, function (data) {
+                console.log(data);
+                if (data.err == 'None')
+                    window.location.href = '/user/userlist/';
+            })
             });
         });
 </script>
