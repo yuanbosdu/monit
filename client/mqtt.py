@@ -36,16 +36,33 @@ else:
 
 def serial_task():
     global mserial
+    led_state = 0
     print("start serial task funtion")
     while True:
         mserial.write("read".encode())
-        # time.sleep(1)
+        time.sleep(1)
         
         text = mserial.readline()
 
         print(text)
 
-        time.sleep(1)
+        time.sleep(2)
+
+        # write cmd to the arduino
+        if led_state == 0:
+            led_state = 1
+            write_string = 'write1'
+        else:
+            led_state = 0
+            write_string = 'write0'
+
+        print(write_string)
+
+        mserial.write(write_string.encode())
+
+        time.sleep(5)
+
+
 
 
 joblist = list()
