@@ -1,4 +1,4 @@
-# -*- encoding:utf-8 -*-
+# -*- coding: utf-8 -*-
 import paho.mqtt.client as mqtt
 import time
 import datetime
@@ -26,9 +26,11 @@ except Exception as err:
 if mserial.isOpen():
     print("the serial port %s has open" % SERIAL_PORT)
     mserial.close()
+    mserial.timeout = 2
     mserial.open()
 else:
     print("the serial port %s has not open" % SERIAL_PORT)
+    mserial.timeout = 2
     mserial.open()
 
 
@@ -36,8 +38,8 @@ def serial_task():
     global mserial
     print("start serial task funtion")
     while True:
-        mserial.write(bytearray("hello world", 'ascii'))
-        # time.sleep(10)
+        mserial.write("read".encode())
+        # time.sleep(1)
         
         text = mserial.readline()
 
