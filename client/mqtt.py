@@ -34,19 +34,27 @@ else:
     mserial.open()
 
 
+start_string='monitstart'
+end_string=b'\r\n'
+device_uuid=b'bef67b8a-5216-11e9-998f-b827eb659f58'
+
+
 def serial_task():
     global mserial
     led_state = 0
     print("start serial task funtion")
     while True:
-        mserial.write("read".encode())
+        mserial.write("read$".encode())
         time.sleep(1)
         
         text = mserial.readline()
-
+        
+        #send the message to mqtt server
         print(text)
-
-        time.sleep(2)
+        if bytes(start_string, encoding='utf8') in text:
+            text = text.strip(end_string)
+            text += b';uuid=' + device_uuid
+            client1.publish('mqtt_data', text)
 
         # write cmd to the arduino
         if led_state == 0:
@@ -71,9 +79,6 @@ for i in range(1):
     j.setDaemon(True)
     j.start()
     joblist.append(j)
-
-while True:
-    pass
 
 
 # end serial port
@@ -140,8 +145,6 @@ exit()
 def on_connect(client, userdata, flags, rc):
     global show_promt
     print('Connect with result code %s' % str(rc))
-    client2.subscribe('client1')
-    show_promt = show_promt + 1
 
 
 def on_message(client, userdata, msg):
@@ -149,32 +152,21 @@ def on_message(client, userdata, msg):
     print(msg.topic, str(msg.payload))
 
 
-client1 = mqtt.Client('123')
+client1 = mqtt.Client('mqtt_client')
 client1.username_pw_set(USER, PASSWORD)
 client1.on_connect = on_connect
 client1.on_message = on_message
 
-client2 = mqtt.Client('456')
-client2.username_pw_set('admin', 'password')
-client2.on_connect = on_connect
-client2.on_message = on_message
-
 
 client1.connect_async(HOST, PORT, keepalive=60)
-client2.connect_async(HOST, PORT, keepalive=60)
 client1.loop_start()
-client2.loop_start()
 
 while True:
-    cmd = None
-    time.sleep(1)
-    if show_promt == 2:
-        cmd = input('input message:')
+    cmd = input('input message:')
     if cmd == 'quit':
         print('end mqtt')
         client1.loop_stop()
-        client2.loop_stop()
         break
-    client1.publish('client1', '*'.join((cmd, time.strftime('%H-%M-%S', time.localtime(
-        time.time()))
-    )))
+    #client1.publish('client1', '*'.join((cmd, time.strftime('%H-%M-%S', time.localtime(
+    #    time.time()))
+    #)))
