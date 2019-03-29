@@ -7,12 +7,66 @@ from peewee import *
 import random
 from playhouse.shortcuts import model_to_dict, dict_to_model
 
+import serial
+import time
+import json
+import threading
+
+# serial port
+SERIAL_PORT = '/dev/ttyUSB0'
+SERIAL_BAUD = 115200
+
+mserial = None
+try:
+    mserial = serial.Serial(SERIAL_PORT, SERIAL_BAUD)
+    pass
+except Exception as err:
+    print(err)
+
+if mserial.isOpen():
+    print("the serial port %s has open" % SERIAL_PORT)
+    mserial.close()
+    mserial.open()
+else:
+    print("the serial port %s has not open" % SERIAL_PORT)
+    mserial.open()
+
+
+def serial_task():
+    global mserial
+    print("start serial task funtion")
+    while True:
+        mserial.write(bytearray("hello world", 'ascii'))
+        # time.sleep(10)
+        
+        text = mserial.readline()
+
+        print(text)
+
+        time.sleep(1)
+
+
+joblist = list()
+for i in range(1):
+    j = threading.Thread(target=serial_task)
+    j.setDaemon(True)
+    j.start()
+    joblist.append(j)
+
+while True:
+    pass
+
+
+# end serial port
+
 
 HOST = '127.0.0.1'
 PORT = 61613
-USER = 'temp'
-PASSWORD = 'temp'
-DATABASE = '/opt/monit/monit/db.sqlite3'
+# USER = 'temp'
+# PASSWORD = 'temp'
+USER = 'admin'
+PASSWORD = 'password'
+DATABASE = '/opt/monit/db.sqlite3'
 
 show_promt = 0
 
@@ -48,7 +102,7 @@ class DeviceState(BaseModel):
     class Meta:
         table_name = 'zigbee_zigbeestate'
 
-
+"""
 test1 = Device.filter(uuid='bac36246-2852-11e9-b686-40a5ef06d51d')[0]
 deviceId = test1.id
 print(deviceId)
@@ -62,7 +116,7 @@ for i in range(20):
     )
 
 exit()
-
+"""
 
 def on_connect(client, userdata, flags, rc):
     global show_promt
@@ -93,6 +147,7 @@ client1.loop_start()
 client2.loop_start()
 
 while True:
+    cmd = None
     time.sleep(1)
     if show_promt == 2:
         cmd = input('input message:')
