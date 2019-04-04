@@ -14,11 +14,14 @@ String inByte;
 #define CMD_READ "read"
 #define CMD_WRITE "write"
 
+
+#define LED_PIN   13
 #define DHT11_PIN 5
 
 void setup()
 {
   Serial.begin(115200);
+  pinMode(LED_PIN, OUTPUT);
   while(Serial.read()>0);
 }
 
@@ -50,18 +53,25 @@ void loop()
 {
   if (Serial.available() > 0)
   {
-    inByte = Serial.read();
+    inByte = Serial.readString();
+    delay(1000);
   }
-  if (inByte == 1 || 1)
+  if (!inByte.compareTo(CMD_READ))
   {
      String dht11 = read_dht11();
      Serial.println(dht11);
      Serial.println(inByte);
-     // while(Serial.read()>0);
+     inByte = "";
    }
-   else
+   else if (!inByte.compareTo("write0"))
    {
+     digitalWrite(LED_PIN, LOW);
    }
+   else if(!inByte.compareTo("write1"))
+   {
+     digitalWrite(LED_PIN, HIGH);
+   }
+     delay(1000);
   
 }
 
