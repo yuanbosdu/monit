@@ -13,8 +13,8 @@ String inByte;
 
 #define CMD_READ "read"
 #define CMD_WRITE "write"
-
-
+#define START "monitstart"
+#define STOP '$'
 #define LED_PIN   13
 #define DHT11_PIN 5
 
@@ -42,7 +42,8 @@ String read_dht11(void)
   }
   else
   {
-    t = t + "OK;";
+    t = START;
+    t = t + ";OK;";
     t = t + "humidity=" + DHT.humidity + "&&";
     t = t + "temperature=" + DHT.temperature ;
   }
@@ -53,7 +54,7 @@ void loop()
 {
   if (Serial.available() > 0)
   {
-    inByte = Serial.readString();
+    inByte = Serial.readStringUntil(STOP);
     delay(1000);
   }
   if (!inByte.compareTo(CMD_READ))
